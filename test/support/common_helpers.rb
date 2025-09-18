@@ -30,7 +30,14 @@ module CommonHelpers
     if $stderr != $oldstderr && $stderr.respond_to?(:string) && !$stderr.string.empty?
       # we ignore 2.X because of the number of `instance variable @xyz not initialized` warnings
       if !RUBY_VERSION.start_with?('2.')
-        raise "Unexpected stderr. Handle stderr with assert_stderr\n\n#{$stderr.string}"
+        # Filter out ld-eventsource frozen string literal warnings in Ruby 3.4+
+        stderr_lines = $stderr.string.split("\n").reject do |line|
+          line.include?('ld-eventsource') && line.include?('literal string will be frozen in the future')
+        end
+
+        if !stderr_lines.empty?
+          raise "Unexpected stderr. Handle stderr with assert_stderr\n\n#{stderr_lines.join("\n")}"
+        end
       end
     end
 
