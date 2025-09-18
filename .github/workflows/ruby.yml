@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby-version: ['3.0','3.1','3.2','3.3']
+        ruby-version: ['3.1','3.2','3.3','3.4']
 
     steps:
     - uses: actions/checkout@v4
@@ -42,7 +42,7 @@ jobs:
     - name: Run tests
       run: bundle exec rake --trace
       env:
-        PREFAB_INTEGRATION_TEST_API_KEY: ${{ secrets.PREFAB_INTEGRATION_TEST_API_KEY }}
-        PREFAB_INTEGRATION_TEST_ENCRYPTION_KEY: ${{ secrets.PREFAB_INTEGRATION_TEST_ENCRYPTION_KEY }}
+        REFORGE_INTEGRATION_TEST_API_KEY: ${{ secrets.REFORGE_INTEGRATION_TEST_API_KEY }}
+        PREFAB_INTEGRATION_TEST_ENCRYPTION_KEY: c87ba22d8662282abe8a0e4651327b579cb64a454ab0f4c170b45b15f049a221
         NOT_A_NUMBER: "abcd"
         IS_A_NUMBER: "1234"

@@ -6,12 +6,12 @@ module Reforge
     PROTO_HEADERS = {
       'Content-Type' => 'application/x-protobuf',
       'Accept' => 'application/x-protobuf',
-      'X-ReforgeCloud-Client-Version' => "reforge-cloud-ruby-#{Reforge::VERSION}"
+      'X-Reforge-SDK-Version' => "sdk-ruby-#{Reforge::VERSION}"
     }.freeze
 
-    def initialize(uri, api_key)
+    def initialize(uri, sdk_key)
       @uri = uri
-      @api_key = api_key
+      @sdk_key = sdk_key
     end
 
     def uri
@@ -29,13 +29,13 @@ module Reforge
     def connection(headers = {})
       if Faraday::VERSION[0].to_i >= 2
         Faraday.new(@uri) do |conn|
-          conn.request :authorization, :basic, AUTH_USER, @api_key
+          conn.request :authorization, :basic, AUTH_USER, @sdk_key
 
           conn.headers.merge!(headers)
         end
       else
         Faraday.new(@uri) do |conn|
-          conn.request :basic_auth, AUTH_USER, @api_key
+          conn.request :basic_auth, AUTH_USER, @sdk_key
 
           conn.headers.merge!(headers)
         end

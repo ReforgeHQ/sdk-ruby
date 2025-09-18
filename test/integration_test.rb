@@ -134,7 +134,7 @@ class IntegrationTest
       prefab_config_classpath_dir: 'test',
       prefab_envs: ['unit_tests'],
       prefab_datasources: Reforge::Options::DATASOURCES::ALL,
-      api_key: ENV['PREFAB_INTEGRATION_TEST_API_KEY'],
+      sdk_key: ENV['REFORGE_INTEGRATION_TEST_API_KEY'],
       sources: [
         'https://belt.staging-prefab.cloud',
         'https://suspenders.staging-prefab.cloud',

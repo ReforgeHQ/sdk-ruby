@@ -129,7 +129,7 @@ module Reforge
 
     def load_source_checkpoint(start_at_id: 0)
       @options.config_sources.each do |source|
-        conn = Reforge::CachingHttpConnection.new("#{source}/api/v1/configs/#{start_at_id}", @base_client.api_key)
+        conn = Reforge::CachingHttpConnection.new("#{source}/api/v1/configs/#{start_at_id}", @base_client.sdk_key)
         result = load_url(conn, :remote_api)
         return true if result
       end
@@ -198,7 +198,7 @@ module Reforge
     end
 
     def calc_cache_path
-      file_name = "prefab.cache.#{@base_client.options.api_key_id}.json"
+      file_name = "prefab.cache.#{@base_client.options.sdk_key_id}.json"
       dir = ENV.fetch('XDG_CACHE_HOME', File.join(Dir.home, '.cache'))
       File.join(dir, file_name)
     end
@@ -266,7 +266,7 @@ module Reforge
         source: source,
         project_id: project_id,
         project_env_id: @config_resolver.project_env_id,
-        api_key_id: @base_client.options.api_key_id
+        sdk_key_id: @base_client.options.sdk_key_id
       )
       LOG.info presenter.to_s
       LOG.debug to_s

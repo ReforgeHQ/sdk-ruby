@@ -31,11 +31,11 @@ class TestOptions < Minitest::Test
   end
 
   def test_works_with_named_arguments
-    assert_equal API_KEY, Reforge::Options.new(api_key: API_KEY).api_key
+    assert_equal API_KEY, Reforge::Options.new(sdk_key: API_KEY).sdk_key
   end
 
   def test_works_with_hash
-    assert_equal API_KEY, Reforge::Options.new({ api_key: API_KEY }).api_key
+    assert_equal API_KEY, Reforge::Options.new({ sdk_key: API_KEY }).sdk_key
   end
 
   def test_collect_max_paths

@@ -26,7 +26,7 @@ class TestConfigClient < Minitest::Test
 
   def test_initialization_timeout_error
     options = Reforge::Options.new(
-      api_key: '123-ENV-KEY-SDK',
+      sdk_key: '123-ENV-KEY-SDK',
       initialization_timeout_sec: 0.01
     )
 
@@ -54,20 +54,20 @@ class TestConfigClient < Minitest::Test
 
   def test_invalid_api_key_error
     options = Reforge::Options.new(
-      api_key: ''
+      sdk_key: ''
     )
 
-    err = assert_raises(Reforge::Errors::InvalidApiKeyError) do
+    err = assert_raises(Reforge::Errors::InvalidSdkKeyError) do
       Reforge::Client.new(options).config_client.get('anything')
     end
 
-    assert_match(/No API key/, err.message)
+    assert_match(/No SDK key/, err.message)
 
     options = Reforge::Options.new(
-      api_key: 'invalid'
+      sdk_key: 'invalid'
     )
 
-    err = assert_raises(Reforge::Errors::InvalidApiKeyError) do
+    err = assert_raises(Reforge::Errors::InvalidSdkKeyError) do
       Reforge::Client.new(options).config_client.get('anything')
     end
 
@@ -94,7 +94,7 @@ class TestConfigClient < Minitest::Test
     options = Reforge::Options.new(
       prefab_datasources: Reforge::Options::DATASOURCES::LOCAL_ONLY,
       x_use_local_cache: true,
-      api_key: "123-ENV-KEY-SDK",)
+      sdk_key: "123-ENV-KEY-SDK",)
 
     config_client = Reforge::ConfigClient.new(MockBaseClient.new(options), 10)
     assert_equal "#{Dir.home}/.cache/prefab.cache.123.json", config_client.send(:cache_path)

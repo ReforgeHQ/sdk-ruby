@@ -3,7 +3,7 @@
 module Reforge
   # This class contains all the options that can be passed to the Prefab client.
   class Options
-    attr_reader :api_key
+    attr_reader :sdk_key
     attr_reader :namespace
     attr_reader :sources
     attr_reader :sse_sources
@@ -49,13 +49,13 @@ module Reforge
 
     private def init(
       sources: nil,
-      api_key: ENV['PREFAB_API_KEY'],
+      sdk_key: ENV['SDK_API_KEY'] || ENV['PREFAB_API_KEY'],
       namespace: '',
       prefab_api_url: nil,
       on_no_default: ON_NO_DEFAULT::RAISE, # options :raise, :warn_and_return_nil,
       initialization_timeout_sec: 10, # how long to wait before on_init_failure
       on_init_failure: ON_INITIALIZATION_FAILURE::RAISE,
-      prefab_datasources: ENV['PREFAB_DATASOURCES'] == 'LOCAL_ONLY' ? DATASOURCES::LOCAL_ONLY : DATASOURCES::ALL,
+      prefab_datasources: (ENV['REFORGE_DATASOURCES'] || ENV['PREFAB_DATASOURCES']) == 'LOCAL_ONLY' ? DATASOURCES::LOCAL_ONLY : DATASOURCES::ALL,
       prefab_config_override_dir: Dir.home,
       prefab_config_classpath_dir: '.', # where to load local overrides
       prefab_envs: ENV['PREFAB_ENVS'].nil? ? [] : ENV['PREFAB_ENVS'].split(','),
@@ -73,7 +73,7 @@ module Reforge
       symbolize_json_names: false,
       global_context: {}
     )
-      @api_key = api_key
+      @sdk_key = sdk_key
       @namespace = namespace
       @on_no_default = on_no_default
       @initialization_timeout_sec = initialization_timeout_sec
@@ -177,8 +177,8 @@ module Reforge
       @collect_max_evaluation_summaries
     end
 
-    def api_key_id
-      @api_key&.split("-")&.first
+    def sdk_key_id
+      @sdk_key&.split("-")&.first
     end
 
     def for_fork

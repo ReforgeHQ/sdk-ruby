@@ -167,20 +167,20 @@ class TestClient < Minitest::Test
     fake_api_key = '123-development-yourapikey-SDK'
 
     # it is nil by default
-    assert_nil new_client(api_key: fake_api_key).evaluation_summary_aggregator
+    assert_nil new_client(sdk_key: fake_api_key).evaluation_summary_aggregator
 
     # it is nil when local_only even if collect_max_evaluation_summaries is true
     assert_nil new_client(prefab_datasources: LOCAL_ONLY,
                                   collect_evaluation_summaries: true, ).evaluation_summary_aggregator
 
     # it is nil when collect_max_evaluation_summaries is false
-    assert_nil new_client(api_key: fake_api_key,
+    assert_nil new_client(sdk_key: fake_api_key,
                                   prefab_datasources: :all,
                                   collect_evaluation_summaries: false).evaluation_summary_aggregator
 
     # it is not nil when collect_max_evaluation_summaries is true and the datasource is not local_only
     assert_equal Reforge::EvaluationSummaryAggregator,
-                 new_client(api_key: fake_api_key,
+                 new_client(sdk_key: fake_api_key,
                             prefab_datasources: :all,
                             collect_evaluation_summaries: true).evaluation_summary_aggregator.class
 

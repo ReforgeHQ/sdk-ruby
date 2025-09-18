@@ -34,7 +34,7 @@ Many ruby web servers fork. When the process is forked, the current realtime upd
 
 ```ruby
 #config/application.rb
-Prefab.init # reads PREFAB_API_KEY env var by default
+Prefab.init # reads REFORGE_SDK_KEY env var by default
 ```
 
 ```ruby

@@ -10,7 +10,7 @@ class TestSSEConfigClient < Minitest::Test
       'https://belt.staging-prefab.cloud/'
     ]
 
-    options = Reforge::Options.new(sources: sources, api_key: ENV.fetch('PREFAB_INTEGRATION_TEST_API_KEY', nil))
+    options = Reforge::Options.new(sources: sources, sdk_key: ENV.fetch('REFORGE_INTEGRATION_TEST_API_KEY', nil))
 
     config_loader = OpenStruct.new(highwater_mark: 4)
 
@@ -40,7 +40,7 @@ class TestSSEConfigClient < Minitest::Test
       'https://api.staging-prefab.cloud/'
     ]
 
-    prefab_options = Reforge::Options.new(sources: sources, api_key: ENV.fetch('PREFAB_INTEGRATION_TEST_API_KEY', nil))
+    prefab_options = Reforge::Options.new(sources: sources, sdk_key: ENV.fetch('REFORGE_INTEGRATION_TEST_API_KEY', nil))
 
     config_loader = OpenStruct.new(highwater_mark: 4)
 
@@ -75,7 +75,7 @@ class TestSSEConfigClient < Minitest::Test
 
     config_loader = OpenStruct.new(highwater_mark: 4)
 
-    prefab_options = OpenStruct.new(sse_sources: ['http://localhost:4567'], api_key: 'test')
+    prefab_options = OpenStruct.new(sse_sources: ['http://localhost:4567'], sdk_key: 'test')
     last_event_id = nil
     client = nil
 
@@ -111,7 +111,7 @@ class TestSSEConfigClient < Minitest::Test
 
     config_loader = OpenStruct.new(highwater_mark: 4)
 
-    prefab_options = OpenStruct.new(sse_sources: ['http://localhost:4568'], api_key: 'test')
+    prefab_options = OpenStruct.new(sse_sources: ['http://localhost:4568'], sdk_key: 'test')
     last_event_id = nil
     client = nil
 

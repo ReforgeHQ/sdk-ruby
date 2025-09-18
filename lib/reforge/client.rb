@@ -8,7 +8,7 @@ module Reforge
     MAX_SLEEP_SEC = 10
     BASE_SLEEP_SEC = 0.5
 
-    attr_reader :namespace, :interceptor, :api_key, :options, :instance_hash
+    attr_reader :namespace, :interceptor, :sdk_key, :options, :instance_hash
 
     def initialize(options = Reforge::Options.new)
       @options = options.is_a?(Reforge::Options) ? options : Reforge::Options.new(options)
@@ -21,8 +21,8 @@ module Reforge
       elsif @options.datafile?
         LOG.debug 'Prefab Running in DataFile Mode'
       else
-        @api_key = @options.api_key
-        raise Reforge::Errors::InvalidApiKeyError, @api_key if @api_key.nil? || @api_key.empty? || api_key.count('-') < 1
+        @sdk_key = @options.sdk_key
+        raise Reforge::Errors::InvalidSdkKeyError, @sdk_key if @sdk_key.nil? || @sdk_key.empty? || sdk_key.count('-') < 1
       end
 
       context.clear
@@ -112,7 +112,7 @@ module Reforge
     end
 
     def post(path, body)
-      Reforge::HttpConnection.new(@options.telemetry_destination, @api_key).post(path, body)
+      Reforge::HttpConnection.new(@options.telemetry_destination, @sdk_key).post(path, body)
     end
 
     def inspect

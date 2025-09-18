@@ -6,7 +6,7 @@ module Reforge
   class CachingHttpConnectionTest < Minitest::Test
     def setup
       @uri = 'https://api.example.com'
-      @api_key = 'test-key'
+      @sdk_key = 'test-key'
       @path = '/some/path'
 
       # Reset the cache before each test
@@ -18,7 +18,7 @@ module Reforge
 
       # Stub the HttpConnection constructor
       HttpConnection.stub :new, @http_connection do
-        @subject = CachingHttpConnection.new(@uri, @api_key)
+        @subject = CachingHttpConnection.new(@uri, @sdk_key)
       end
     end
 
@@ -73,7 +73,7 @@ module Reforge
       mock.expect(:get, response, [@path, { 'If-None-Match' => 'abc123' }])
 
       Timecop.freeze do
-        subject = CachingHttpConnection.new(@uri, @api_key)
+        subject = CachingHttpConnection.new(@uri, @sdk_key)
         subject.instance_variable_set('@connection', mock)
 
         # Initial request
@@ -116,7 +116,7 @@ module Reforge
       # Second request with both path and headers
       mock.expect(:get, not_modified_response, [@path, { 'If-None-Match' => 'abc123' }])
 
-      subject = CachingHttpConnection.new(@uri, @api_key)
+      subject = CachingHttpConnection.new(@uri, @sdk_key)
       subject.instance_variable_set('@connection', mock)
 
       # Initial request to populate cache
@@ -148,7 +148,7 @@ module Reforge
       mock.expect(:get, response, [@path])
       mock.expect(:get, response, [@path])
 
-      subject = CachingHttpConnection.new(@uri, @api_key)
+      subject = CachingHttpConnection.new(@uri, @sdk_key)
       subject.instance_variable_set('@connection', mock)
 
       2.times do
@@ -160,8 +160,8 @@ module Reforge
     end
     def test_cache_is_shared_across_instances
       HttpConnection.stub :new, @http_connection do
-        instance1 = CachingHttpConnection.new(@uri, @api_key)
-        instance2 = CachingHttpConnection.new(@uri, @api_key)
+        instance1 = CachingHttpConnection.new(@uri, @sdk_key)
+        instance2 = CachingHttpConnection.new(@uri, @sdk_key)
 
         assert_same instance1.class.cache, instance2.class.cache
       end
@@ -199,7 +199,7 @@ module Reforge
       # Second request should have If-None-Match header
       mock.expect(:get, not_modified_response, [@path, { 'If-None-Match' => 'abc123' }])
 
-      subject = CachingHttpConnection.new(@uri, @api_key)
+      subject = CachingHttpConnection.new(@uri, @sdk_key)
       subject.instance_variable_set('@connection', mock)
 
       # Initial request to populate cache

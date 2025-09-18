@@ -139,7 +139,7 @@ class TestContextShapeAggregator < Minitest::Test
       prefab_datasources: Reforge::Options::DATASOURCES::ALL,
       initialization_timeout_sec: 0,
       on_init_failure: Reforge::Options::ON_INITIALIZATION_FAILURE::RETURN,
-      api_key: '123-development-yourapikey-SDK',
+      sdk_key: '123-development-yourapikey-SDK',
       context_upload_mode: :shape_only
     }.merge(overrides))
   end

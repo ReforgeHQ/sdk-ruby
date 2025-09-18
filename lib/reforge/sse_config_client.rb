@@ -89,13 +89,13 @@ module Reforge
     end
 
     def headers
-      auth = "#{AUTH_USER}:#{@prefab_options.api_key}"
+      auth = "#{AUTH_USER}:#{@prefab_options.sdk_key}"
       auth_string = Base64.strict_encode64(auth)
       return {
         'Last-Event-ID' => @config_loader.highwater_mark,
         'Authorization' => "Basic #{auth_string}",
         'Accept' => 'text/event-stream',
-        'X-ReforgeCloud-Client-Version' => "reforge-cloud-ruby-#{Reforge::VERSION}"
+        'X-Reforge-SDK-Version' => "sdk-ruby-#{Reforge::VERSION}"
       }
     end
 

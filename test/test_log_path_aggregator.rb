@@ -61,7 +61,7 @@ class TestLogPathAggregator < Minitest::Test
   def new_client(overrides = {})
     super(**{
       prefab_datasources: Reforge::Options::DATASOURCES::LOCAL_ONLY,
-      api_key: '123-development-yourapikey-SDK',
+      sdk_key: '123-development-yourapikey-SDK',
       collect_max_paths: 1000,
       collect_sync_interval: 1000 # we'll trigger sync manually in our test
     }.merge(overrides))
