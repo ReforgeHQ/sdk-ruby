@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-module Prefab
+module Reforge
   class CachingHttpConnectionTest < Minitest::Test
     def setup
       @uri = 'https://api.example.com'

@@ -4,8 +4,8 @@
 require 'irb'
 require_relative "./script_setup"
 
-if !ENV['PREFAB_LOG_CLIENT_BOOTSTRAP_LOG_LEVEL']
-  puts "run with PREFAB_LOG_CLIENT_BOOTSTRAP_LOG_LEVEL=debug (or trace) for more output"
+if !ENV['REFORGE_LOG_CLIENT_BOOTSTRAP_LOG_LEVEL']
+  puts "run with REFORGE_LOG_CLIENT_BOOTSTRAP_LOG_LEVEL=debug (or trace) for more output"
 end
 
 # Start an IRB session

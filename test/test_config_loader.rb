@@ -5,12 +5,12 @@ require 'test_helper'
 class TestConfigLoader < Minitest::Test
   def setup
     super
-    options = Prefab::Options.new(
+    options = Reforge::Options.new(
       prefab_config_override_dir: 'none',
       prefab_config_classpath_dir: 'test',
       prefab_envs: 'unit_tests'
     )
-    @loader = Prefab::ConfigLoader.new(MockBaseClient.new(options))
+    @loader = Reforge::ConfigLoader.new(MockBaseClient.new(options))
   end
 
   def test_load
@@ -33,12 +33,12 @@ class TestConfigLoader < Minitest::Test
   end
 
   def test_load_without_unit_test_env
-    options = Prefab::Options.new(
+    options = Reforge::Options.new(
       prefab_config_override_dir: 'none',
       prefab_config_classpath_dir: 'test'
       # no prefab_envs
     )
-    @loader = Prefab::ConfigLoader.new(MockBaseClient.new(options))
+    @loader = Reforge::ConfigLoader.new(MockBaseClient.new(options))
     should_be :string, 'default sample value', 'sample'
     should_be :bool, true, 'sample_bool'
   end

@@ -20,16 +20,16 @@ class TestLogger < Minitest::Test
 
   def setup
     super
-    Prefab::LoggerClient.send(:public, :class_path_name)
-    Prefab::LoggerClient.send(:public, :level_of)
+    Reforge::LoggerClient.send(:public, :class_path_name)
+    Reforge::LoggerClient.send(:public, :level_of)
     @client = new_client
     @logger = @client.log
   end
 
   def test_bootstrap_log_level
-    assert !Prefab.bootstrap_log_level(SemanticLogger::Log.new("TestLogger",:info))
-    with_env('PREFAB_LOG_CLIENT_BOOTSTRAP_LOG_LEVEL', 'info') do
-      assert Prefab.bootstrap_log_level(SemanticLogger::Log.new("TestLogger",:info))
+    assert !Reforge.bootstrap_log_level(SemanticLogger::Log.new("TestLogger",:info))
+    with_env('REFORGE_LOG_CLIENT_BOOTSTRAP_LOG_LEVEL', 'info') do
+      assert Reforge.bootstrap_log_level(SemanticLogger::Log.new("TestLogger",:info))
     end
   end
 
@@ -218,8 +218,8 @@ class TestLogger < Minitest::Test
 
   def test_class_path_name
     assert_equal "minitest.test.test_logger", @logger.class_path_name("TestLogger")
-    assert_equal "prefab.logger_client", @logger.class_path_name("Prefab::LoggerClient")
-    assert_equal "semantic_logger.logger.prefab.internal_logger", @logger.class_path_name("Prefab::InternalLogger")
+    assert_equal "reforge.logger_client", @logger.class_path_name("Reforge::LoggerClient")
+    assert_equal "semantic_logger.logger.reforge.internal_logger", @logger.class_path_name("Reforge::InternalLogger")
   end
 
 end

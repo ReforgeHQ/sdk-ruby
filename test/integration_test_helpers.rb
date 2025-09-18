@@ -18,7 +18,7 @@ module IntegrationTestHelpers
       .select { |file| file =~ /\.ya?ml$/ }
   end
 
-  SEVERITY_LOOKUP = Prefab::LogPathAggregator::SEVERITY_KEY.invert
+  SEVERITY_LOOKUP = Reforge::LogPathAggregator::SEVERITY_KEY.invert
 
   def self.prepare_post_data(it)
     case it.aggregator
@@ -44,7 +44,7 @@ module IntegrationTestHelpers
     when "context_shape"
       aggregator = it.test_client.context_shape_aggregator
 
-      context = Prefab::Context.new(it.data)
+      context = Reforge::Context.new(it.data)
 
       aggregator.push(context)
 
@@ -100,7 +100,7 @@ module IntegrationTestHelpers
       aggregator = it.test_client.example_contexts_aggregator
 
       it.data.each do |key, values|
-        aggregator.record(Prefab::Context.new({ key => values }))
+        aggregator.record(Reforge::Context.new({ key => values }))
       end
 
       expected_data = []
@@ -112,7 +112,7 @@ module IntegrationTestHelpers
               PrefabProto::Context.new(
                 type: k,
                 values: vs.each_pair.map do |key, value|
-                  [key, Prefab::ConfigValueWrapper.wrap(value)]
+                  [key, Reforge::ConfigValueWrapper.wrap(value)]
                 end.to_h
               )
             ]
@@ -127,7 +127,7 @@ module IntegrationTestHelpers
 
   def self.with_block_context_maybe(context, &block)
     if context
-      Prefab::Context.with_context(context, &block)
+      Reforge::Context.with_context(context, &block)
     else
       yield
     end

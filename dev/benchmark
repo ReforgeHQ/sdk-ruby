@@ -13,13 +13,13 @@ spec.require_paths.each do |path|
 end
 
 spec.require_paths.each do |path|
-  require "./lib/prefab-cloud-ruby"
+  require "./lib/reforge-sdk"
 end
 
-require 'prefab-cloud-ruby'
+require 'reforge-sdk'
 require 'benchmark/ips'
 
-prefab = Prefab::Client.new(collect_logger_counts: false, collect_evaluation_summaries: false,
+prefab = Reforge::Client.new(collect_logger_counts: false, collect_evaluation_summaries: false,
                             context_upload_mode: :none)
 
 prefab.get('prefab.auth.allowed_origins')

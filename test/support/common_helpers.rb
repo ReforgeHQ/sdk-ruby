@@ -7,16 +7,16 @@ module CommonHelpers
     $oldstderr, $stderr = $stderr, StringIO.new
 
     $logs = StringIO.new
-    Prefab::Context.global_context.clear
-    Prefab::Context.default_context.clear
-    SemanticLogger.add_appender(io: $logs, filter: Prefab.log_filter)
+    Reforge::Context.global_context.clear
+    Reforge::Context.default_context.clear
+    SemanticLogger.add_appender(io: $logs, filter: Reforge.log_filter)
     SemanticLogger.sync!
   end
 
   def teardown
     if $logs && !$logs.string.empty?
       log_lines = $logs.string.split("\n").reject do |line|
-        line.match(/Prefab::ConfigClient -- No success loading checkpoints/)
+        line.match(/Reforge::ConfigClient -- No success loading checkpoints/)
       end
 
       if log_lines.size > 0
@@ -57,7 +57,7 @@ module CommonHelpers
     prefab_config_override_dir: 'none',
     prefab_config_classpath_dir: 'test',
     prefab_envs: ['unit_tests'],
-    prefab_datasources: Prefab::Options::DATASOURCES::LOCAL_ONLY,
+    prefab_datasources: Reforge::Options::DATASOURCES::LOCAL_ONLY,
     collect_sync_interval: EFFECTIVELY_NEVER,
   }.freeze
 
@@ -65,7 +65,7 @@ module CommonHelpers
     config = overrides.delete(:config)
     project_env_id = overrides.delete(:project_env_id)
 
-    Prefab::Client.new(prefab_options(overrides)).tap do |client|
+    Reforge::Client.new(prefab_options(overrides)).tap do |client|
       inject_config(client, config) if config
 
       client.resolver.project_env_id = project_env_id if project_env_id
@@ -73,7 +73,7 @@ module CommonHelpers
   end
 
   def prefab_options(overrides = {})
-    Prefab::Options.new(
+    Reforge::Options.new(
       **DEFAULT_NEW_CLIENT_OPTIONS.merge(overrides)
     )
   end
@@ -157,7 +157,7 @@ module CommonHelpers
   end
 
   def context(properties)
-    Prefab::Context.new(properties)
+    Reforge::Context.new(properties)
   end
 
   def assert_logged(expected)

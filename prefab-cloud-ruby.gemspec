@@ -5,15 +5,15 @@
 # stub: prefab-cloud-ruby 1.8.9 ruby lib
 
 Gem::Specification.new do |s|
-  s.name = "prefab-cloud-ruby".freeze
+  s.name = "reforge-sdk".freeze
   s.version = "1.8.9"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Jeff Dwyer".freeze]
   s.date = "2025-04-15"
-  s.description = "Feature Flags, Live Config, and Dynamic Log Levels as a service".freeze
-  s.email = "jdwyer@prefab.cloud".freeze
+  s.description = "Feature Flags and Live Config as a service".freeze
+  s.email = "jeff.dwyer@reforge.com".freeze
   s.extra_rdoc_files = [
     "CHANGELOG.md",
     "LICENSE.txt",
@@ -39,51 +39,51 @@ Gem::Specification.new do |s|
     "dev/benchmark",
     "dev/console",
     "dev/script_setup.rb",
-    "lib/prefab-cloud-ruby.rb",
-    "lib/prefab/caching_http_connection.rb",
-    "lib/prefab/client.rb",
-    "lib/prefab/config_client.rb",
-    "lib/prefab/config_client_presenter.rb",
-    "lib/prefab/config_loader.rb",
-    "lib/prefab/config_resolver.rb",
-    "lib/prefab/config_value_unwrapper.rb",
-    "lib/prefab/config_value_wrapper.rb",
-    "lib/prefab/context.rb",
-    "lib/prefab/context_shape.rb",
-    "lib/prefab/context_shape_aggregator.rb",
-    "lib/prefab/criteria_evaluator.rb",
-    "lib/prefab/duration.rb",
-    "lib/prefab/encryption.rb",
-    "lib/prefab/error.rb",
-    "lib/prefab/errors/env_var_parse_error.rb",
-    "lib/prefab/errors/initialization_timeout_error.rb",
-    "lib/prefab/errors/invalid_api_key_error.rb",
-    "lib/prefab/errors/missing_default_error.rb",
-    "lib/prefab/errors/missing_env_var_error.rb",
-    "lib/prefab/errors/uninitialized_error.rb",
-    "lib/prefab/evaluation.rb",
-    "lib/prefab/evaluation_summary_aggregator.rb",
-    "lib/prefab/example_contexts_aggregator.rb",
-    "lib/prefab/exponential_backoff.rb",
-    "lib/prefab/feature_flag_client.rb",
-    "lib/prefab/fixed_size_hash.rb",
-    "lib/prefab/http_connection.rb",
-    "lib/prefab/internal_logger.rb",
-    "lib/prefab/javascript_stub.rb",
-    "lib/prefab/local_config_parser.rb",
-    "lib/prefab/log_path_aggregator.rb",
-    "lib/prefab/logger_client.rb",
-    "lib/prefab/murmer3.rb",
-    "lib/prefab/options.rb",
-    "lib/prefab/periodic_sync.rb",
-    "lib/prefab/prefab.rb",
-    "lib/prefab/rate_limit_cache.rb",
-    "lib/prefab/resolved_config_presenter.rb",
-    "lib/prefab/semver.rb",
-    "lib/prefab/sse_config_client.rb",
-    "lib/prefab/time_helpers.rb",
-    "lib/prefab/weighted_value_resolver.rb",
-    "lib/prefab/yaml_config_parser.rb",
+    "lib/reforge-sdk.rb",
+    "lib/reforge/caching_http_connection.rb",
+    "lib/reforge/client.rb",
+    "lib/reforge/config_client.rb",
+    "lib/reforge/config_client_presenter.rb",
+    "lib/reforge/config_loader.rb",
+    "lib/reforge/config_resolver.rb",
+    "lib/reforge/config_value_unwrapper.rb",
+    "lib/reforge/config_value_wrapper.rb",
+    "lib/reforge/context.rb",
+    "lib/reforge/context_shape.rb",
+    "lib/reforge/context_shape_aggregator.rb",
+    "lib/reforge/criteria_evaluator.rb",
+    "lib/reforge/duration.rb",
+    "lib/reforge/encryption.rb",
+    "lib/reforge/error.rb",
+    "lib/reforge/errors/env_var_parse_error.rb",
+    "lib/reforge/errors/initialization_timeout_error.rb",
+    "lib/reforge/errors/invalid_api_key_error.rb",
+    "lib/reforge/errors/missing_default_error.rb",
+    "lib/reforge/errors/missing_env_var_error.rb",
+    "lib/reforge/errors/uninitialized_error.rb",
+    "lib/reforge/evaluation.rb",
+    "lib/reforge/evaluation_summary_aggregator.rb",
+    "lib/reforge/example_contexts_aggregator.rb",
+    "lib/reforge/exponential_backoff.rb",
+    "lib/reforge/feature_flag_client.rb",
+    "lib/reforge/fixed_size_hash.rb",
+    "lib/reforge/http_connection.rb",
+    "lib/reforge/internal_logger.rb",
+    "lib/reforge/javascript_stub.rb",
+    "lib/reforge/local_config_parser.rb",
+    "lib/reforge/log_path_aggregator.rb",
+    "lib/reforge/logger_client.rb",
+    "lib/reforge/murmer3.rb",
+    "lib/reforge/options.rb",
+    "lib/reforge/periodic_sync.rb",
+    "lib/reforge/prefab.rb",
+    "lib/reforge/rate_limit_cache.rb",
+    "lib/reforge/resolved_config_presenter.rb",
+    "lib/reforge/semver.rb",
+    "lib/reforge/sse_config_client.rb",
+    "lib/reforge/time_helpers.rb",
+    "lib/reforge/weighted_value_resolver.rb",
+    "lib/reforge/yaml_config_parser.rb",
     "lib/prefab_pb.rb",
     "prefab-cloud-ruby.gemspec",
     "test/.prefab.default.config.yaml",
@@ -128,10 +128,10 @@ Gem::Specification.new do |s|
     "test/test_sse_config_client.rb",
     "test/test_weighted_value_resolver.rb"
   ]
-  s.homepage = "http://github.com/prefab-cloud/prefab-cloud-ruby".freeze
+  s.homepage = "https://github.com/ReforgeHQ/sdk-ruby".freeze
   s.licenses = ["MIT".freeze]
   s.rubygems_version = "3.4.19".freeze
-  s.summary = "Prefab Ruby Infrastructure".freeze
+  s.summary = "Reforge SDK Ruby Infrastructure".freeze
 
   s.specification_version = 4
 

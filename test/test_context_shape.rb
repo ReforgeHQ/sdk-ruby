@@ -27,7 +27,7 @@ class TestContextShape < Minitest::Test
 
       [Email.new, 2],
     ].each do |value, expected|
-      actual = Prefab::ContextShape.field_type_number(value)
+      actual = Reforge::ContextShape.field_type_number(value)
 
       refute_nil actual, "Expected a value for input: #{value}"
       assert_equal expected, actual, "Expected #{expected} for #{value}"
@@ -41,7 +41,7 @@ class TestContextShape < Minitest::Test
     supported = type_fields.entries.reject do |entry|
       unsupported.include?(entry.name.to_sym)
     end.map(&:number)
-    mapped = Prefab::ContextShape::MAPPING.values.uniq
+    mapped = Reforge::ContextShape::MAPPING.values.uniq
 
     unless mapped == supported
       raise "ContextShape MAPPING needs update: #{mapped} != #{supported}"

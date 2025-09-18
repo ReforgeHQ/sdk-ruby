@@ -8,8 +8,8 @@ class TestLogPathAggregator < Minitest::Test
   SLEEP_TIME = 0.01
 
   def test_push
-    client = new_client(prefab_datasources: Prefab::Options::DATASOURCES::ALL,)
-    aggregator = Prefab::LogPathAggregator.new(client: client, max_paths: 2, sync_interval: 1000)
+    client = new_client(prefab_datasources: Reforge::Options::DATASOURCES::ALL,)
+    aggregator = Reforge::LogPathAggregator.new(client: client, max_paths: 2, sync_interval: 1000)
 
     aggregator.push('test.test_log_path_aggregator.test_push.1', ::Logger::INFO)
     aggregator.push('test.test_log_path_aggregator.test_push.2', ::Logger::DEBUG)
@@ -47,8 +47,8 @@ class TestLogPathAggregator < Minitest::Test
                                                          errors: 3
                                                        )
                                                      ],
-                                                     start_at: Prefab::TimeHelpers.now_in_ms,
-                                                     end_at: Prefab::TimeHelpers.now_in_ms,))
+                                                     start_at: Reforge::TimeHelpers.now_in_ms,
+                                                     end_at: Reforge::TimeHelpers.now_in_ms,))
             ]
           )
         ]
@@ -60,7 +60,7 @@ class TestLogPathAggregator < Minitest::Test
 
   def new_client(overrides = {})
     super(**{
-      prefab_datasources: Prefab::Options::DATASOURCES::LOCAL_ONLY,
+      prefab_datasources: Reforge::Options::DATASOURCES::LOCAL_ONLY,
       api_key: '123-development-yourapikey-SDK',
       collect_max_paths: 1000,
       collect_sync_interval: 1000 # we'll trigger sync manually in our test
