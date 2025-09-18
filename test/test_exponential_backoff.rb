@@ -4,7 +4,7 @@ require 'test_helper'
 
 class TestExponentialBackoff < Minitest::Test
   def test_backoff
-    backoff = Prefab::ExponentialBackoff.new(max_delay: 120)
+    backoff = Reforge::ExponentialBackoff.new(max_delay: 120)
 
     assert_equal 2, backoff.call
     assert_equal 4, backoff.call

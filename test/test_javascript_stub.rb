@@ -111,7 +111,7 @@ class JavascriptStubTest < Minitest::Test
   end
 
   def test_bootstrap
-    result = Prefab::JavaScriptStub.new(@client).bootstrap({})
+    result = Reforge::JavaScriptStub.new(@client).bootstrap({})
 
 
     File.open('/tmp/prefab_config.json', 'w') do |f|
@@ -124,7 +124,7 @@ window._prefabBootstrap = {
 }
     ).strip, result.strip
 
-    result = Prefab::JavaScriptStub.new(@client).bootstrap({ user: { email: 'gmail.com' } })
+    result = Reforge::JavaScriptStub.new(@client).bootstrap({ user: { email: 'gmail.com' } })
 
     File.open('/tmp/prefab_config.json', 'w') do |f|
       f.write(result)
@@ -140,7 +140,7 @@ window._prefabBootstrap = {
   end
 
   def test_generate_stub
-    result = Prefab::JavaScriptStub.new(@client).generate_stub({})
+    result = Reforge::JavaScriptStub.new(@client).generate_stub({})
 
     assert_equal %(
 window.prefab = window.prefab || {};
@@ -157,7 +157,7 @@ window.prefab.isEnabled = function(key) {
 };
     ).strip, result.strip
 
-    result = Prefab::JavaScriptStub.new(@client).generate_stub({ user: { email: 'gmail.com' } }, 'myEvalCallback')
+    result = Reforge::JavaScriptStub.new(@client).generate_stub({ user: { email: 'gmail.com' } }, 'myEvalCallback')
 
     assert_equal %(
 window.prefab = window.prefab || {};

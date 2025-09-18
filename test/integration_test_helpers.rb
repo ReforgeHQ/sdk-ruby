@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module IntegrationTestHelpers
-  SUBMODULE_PATH = 'test/prefab-cloud-integration-test-data'
+  SUBMODULE_PATH = 'test/shared-integration-test-data'
 
   def self.find_integration_tests
     files = find_test_files
@@ -18,33 +18,12 @@ module IntegrationTestHelpers
       .select { |file| file =~ /\.ya?ml$/ }
   end
 
-  SEVERITY_LOOKUP = Prefab::LogPathAggregator::SEVERITY_KEY.invert
-
   def self.prepare_post_data(it)
     case it.aggregator
-    when "log_path"
-      aggregator = it.test_client.log_path_aggregator
-
-      it.data.each do |data|
-        data['counts'].each_pair do |severity, count|
-          count.times { aggregator.push(data['logger_name'], SEVERITY_LOOKUP[severity]) }
-        end
-      end
-
-      expected_loggers = Hash.new { |h, k| h[k] = PrefabProto::Logger.new }
-
-      it.expected_data.each do |data|
-        data["counts"].each do |(severity, count)|
-          expected_loggers[data["logger_name"]][severity] = count
-          expected_loggers[data["logger_name"]]["logger_name"] = data["logger_name"]
-        end
-      end
-
-      [aggregator, ->(data) { data.events[0].loggers.loggers }, expected_loggers.values]
     when "context_shape"
       aggregator = it.test_client.context_shape_aggregator
 
-      context = Prefab::Context.new(it.data)
+      context = Reforge::Context.new(it.data)
 
       aggregator.push(context)
 
@@ -100,7 +79,7 @@ module IntegrationTestHelpers
       aggregator = it.test_client.example_contexts_aggregator
 
       it.data.each do |key, values|
-        aggregator.record(Prefab::Context.new({ key => values }))
+        aggregator.record(Reforge::Context.new({ key => values }))
       end
 
       expected_data = []
@@ -112,7 +91,7 @@ module IntegrationTestHelpers
               PrefabProto::Context.new(
                 type: k,
                 values: vs.each_pair.map do |key, value|
-                  [key, Prefab::ConfigValueWrapper.wrap(value)]
+                  [key, Reforge::ConfigValueWrapper.wrap(value)]
                 end.to_h
               )
             ]
@@ -127,7 +106,7 @@ module IntegrationTestHelpers
 
   def self.with_block_context_maybe(context, &block)
     if context
-      Prefab::Context.with_context(context, &block)
+      Reforge::Context.with_context(context, &block)
     else
       yield
     end

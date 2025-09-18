@@ -10,13 +10,13 @@ class TestSSEConfigClient < Minitest::Test
       'https://belt.staging-prefab.cloud/'
     ]
 
-    options = Prefab::Options.new(sources: sources, api_key: ENV.fetch('PREFAB_INTEGRATION_TEST_API_KEY', nil))
+    options = Reforge::Options.new(sources: sources, sdk_key: ENV.fetch('REFORGE_INTEGRATION_TEST_API_KEY', nil))
 
     config_loader = OpenStruct.new(highwater_mark: 4)
 
-    client = Prefab::SSEConfigClient.new(options, config_loader)
+    client = Reforge::SSEConfigClient.new(options, config_loader)
 
-    assert_equal 4, client.headers['x-prefab-start-at-id']
+    assert_equal 4, client.headers['Last-Event-ID']
     assert_equal "https://stream.staging-prefab.cloud", client.source
 
     result = nil
@@ -40,15 +40,15 @@ class TestSSEConfigClient < Minitest::Test
       'https://api.staging-prefab.cloud/'
     ]
 
-    prefab_options = Prefab::Options.new(sources: sources, api_key: ENV.fetch('PREFAB_INTEGRATION_TEST_API_KEY', nil))
+    prefab_options = Reforge::Options.new(sources: sources, sdk_key: ENV.fetch('REFORGE_INTEGRATION_TEST_API_KEY', nil))
 
     config_loader = OpenStruct.new(highwater_mark: 4)
 
-    sse_options = Prefab::SSEConfigClient::Options.new(seconds_between_new_connection: 0.01, sleep_delay_for_new_connection_check: 0.01)
+    sse_options = Reforge::SSEConfigClient::Options.new(seconds_between_new_connection: 0.01, sleep_delay_for_new_connection_check: 0.01)
 
-    client = Prefab::SSEConfigClient.new(prefab_options, config_loader, sse_options)
+    client = Reforge::SSEConfigClient.new(prefab_options, config_loader, sse_options)
 
-    assert_equal 4, client.headers['x-prefab-start-at-id']
+    assert_equal 4, client.headers['Last-Event-ID']
 
     result = nil
 
@@ -75,7 +75,7 @@ class TestSSEConfigClient < Minitest::Test
 
     config_loader = OpenStruct.new(highwater_mark: 4)
 
-    prefab_options = OpenStruct.new(sse_sources: ['http://localhost:4567'], api_key: 'test')
+    prefab_options = OpenStruct.new(sse_sources: ['http://localhost:4567'], sdk_key: 'test')
     last_event_id = nil
     client = nil
 
@@ -84,10 +84,10 @@ class TestSSEConfigClient < Minitest::Test
         server.start
       end
 
-      sse_options = Prefab::SSEConfigClient::Options.new(
+      sse_options = Reforge::SSEConfigClient::Options.new(
         sse_default_reconnect_time: 0.1
       )
-      client = Prefab::SSEConfigClient.new(prefab_options, config_loader, sse_options)
+      client = Reforge::SSEConfigClient.new(prefab_options, config_loader, sse_options)
 
       client.start do |_configs, event, _source|
         last_event_id = event.id.to_i
@@ -111,7 +111,7 @@ class TestSSEConfigClient < Minitest::Test
 
     config_loader = OpenStruct.new(highwater_mark: 4)
 
-    prefab_options = OpenStruct.new(sse_sources: ['http://localhost:4568'], api_key: 'test')
+    prefab_options = OpenStruct.new(sse_sources: ['http://localhost:4568'], sdk_key: 'test')
     last_event_id = nil
     client = nil
 
@@ -120,13 +120,13 @@ class TestSSEConfigClient < Minitest::Test
         server.start
       end
 
-      sse_options = Prefab::SSEConfigClient::Options.new(
+      sse_options = Reforge::SSEConfigClient::Options.new(
         sse_default_reconnect_time: 0.1,
         seconds_between_new_connection: 0.1,
         sleep_delay_for_new_connection_check: 0.1,
         errors_to_close_connection: [SSE::Errors::HTTPStatusError]
       )
-      client = Prefab::SSEConfigClient.new(prefab_options, config_loader, sse_options, logger)
+      client = Reforge::SSEConfigClient.new(prefab_options, config_loader, sse_options, logger)
 
       client.start do |_configs, event, _source|
         last_event_id = event.id.to_i

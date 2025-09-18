@@ -12,7 +12,7 @@ spec.require_paths.each do |path|
 end
 
 spec.require_paths.each do |path|
-  require "./lib/prefab-cloud-ruby"
+  require "./lib/reforge-sdk"
 end
 
 SemanticLogger.add_appender(io: $stdout)

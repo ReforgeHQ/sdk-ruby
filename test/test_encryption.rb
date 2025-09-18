@@ -4,9 +4,9 @@ require 'test_helper'
 
 class TestEncryption < Minitest::Test
   def test_encryption
-    secret = Prefab::Encryption.generate_new_hex_key
+    secret = Reforge::Encryption.generate_new_hex_key
 
-    enc = Prefab::Encryption.new(secret)
+    enc = Reforge::Encryption.new(secret)
 
     clear_text = "hello world"
     encrypted = enc.encrypt(clear_text)

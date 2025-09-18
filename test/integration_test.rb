@@ -88,7 +88,7 @@ class IntegrationTest
     if !input['default'].nil?
       [input['key'], input['default'], @local_context]
     elsif @local_context
-      [input['key'], Prefab::NO_DEFAULT_PROVIDED, @local_context]
+      [input['key'], Reforge::NO_DEFAULT_PROVIDED, @local_context]
     else
       [input['key']]
     end
@@ -112,11 +112,11 @@ class IntegrationTest
 
   def parse_error_type(error_type)
     case error_type
-    when 'missing_default' then Prefab::Errors::MissingDefaultError
-    when 'initialization_timeout' then Prefab::Errors::InitializationTimeoutError
+    when 'missing_default' then Reforge::Errors::MissingDefaultError
+    when 'initialization_timeout' then Reforge::Errors::InitializationTimeoutError
     when 'unable_to_decrypt' then OpenSSL::Cipher::CipherError
-    when 'missing_env_var' then Prefab::Errors::MissingEnvVarError
-    when 'unable_to_coerce_env_var' then Prefab::Errors::EnvVarParseError
+    when 'missing_env_var' then Reforge::Errors::MissingEnvVarError
+    when 'unable_to_coerce_env_var' then Reforge::Errors::EnvVarParseError
     else
       unless error_type.nil?
         throw "Unknown error type: #{error_type}"
@@ -125,16 +125,16 @@ class IntegrationTest
   end
 
   def base_client
-    @_base_client ||= Prefab::Client.new(base_client_options)
+    @_base_client ||= Reforge::Client.new(base_client_options)
   end
 
   def base_client_options
-    @_options ||= Prefab::Options.new(**{
+    @_options ||= Reforge::Options.new(**{
       prefab_config_override_dir: 'none',
       prefab_config_classpath_dir: 'test',
       prefab_envs: ['unit_tests'],
-      prefab_datasources: Prefab::Options::DATASOURCES::ALL,
-      api_key: ENV['PREFAB_INTEGRATION_TEST_API_KEY'],
+      prefab_datasources: Reforge::Options::DATASOURCES::ALL,
+      sdk_key: ENV['REFORGE_INTEGRATION_TEST_API_KEY'],
       sources: [
         'https://belt.staging-prefab.cloud',
         'https://suspenders.staging-prefab.cloud',

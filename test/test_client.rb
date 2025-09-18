@@ -3,7 +3,7 @@
 require 'test_helper'
 
 class TestClient < Minitest::Test
-  LOCAL_ONLY = Prefab::Options::DATASOURCES::LOCAL_ONLY
+  LOCAL_ONLY = Reforge::Options::DATASOURCES::LOCAL_ONLY
 
   PROJECT_ENV_ID = 1
   KEY = 'the-key'
@@ -49,7 +49,7 @@ class TestClient < Minitest::Test
   def test_get_with_missing_default
     client = new_client
     # it raises by default
-    err = assert_raises(Prefab::Errors::MissingDefaultError) do
+    err = assert_raises(Reforge::Errors::MissingDefaultError) do
       assert_nil client.get('missing_value')
     end
 
@@ -57,7 +57,7 @@ class TestClient < Minitest::Test
     assert_match(/on_no_default/, err.message)
 
     # you can opt-in to return `nil` instead
-    client = new_client(on_no_default: Prefab::Options::ON_NO_DEFAULT::RETURN_NIL)
+    client = new_client(on_no_default: Reforge::Options::ON_NO_DEFAULT::RETURN_NIL)
     assert_nil client.get('missing_value')
   end
 
@@ -74,15 +74,15 @@ class TestClient < Minitest::Test
 
     ctx = { user: { key: 'jimmy' } }
     assert_equal false, client.enabled?('user_key_match', ctx)
-    assert_equal false, Prefab::Context.with_context(ctx) { client.enabled?('user_key_match') }
+    assert_equal false, Reforge::Context.with_context(ctx) { client.enabled?('user_key_match') }
 
     ctx = { user: { key: 'abc123' } }
     assert_equal true, client.enabled?('user_key_match', ctx)
-    assert_equal true, Prefab::Context.with_context(ctx) { client.enabled?('user_key_match') }
+    assert_equal true, Reforge::Context.with_context(ctx) { client.enabled?('user_key_match') }
 
     ctx = { user: { key: 'xyz987' } }
     assert_equal true, client.enabled?('user_key_match', ctx)
-    assert_equal true, Prefab::Context.with_context(ctx) { client.enabled?('user_key_match') }
+    assert_equal true, Reforge::Context.with_context(ctx) { client.enabled?('user_key_match') }
   end
 
   # NOTE: these are all `false` because we're doing a enabled? on a FF with string variants
@@ -92,15 +92,15 @@ class TestClient < Minitest::Test
 
     ctx = { user: { domain: 'gmail.com' } }
     assert_equal false, client.enabled?('just_my_domain', ctx)
-    assert_equal false, Prefab::Context.with_context(ctx) { client.enabled?('just_my_domain') }
+    assert_equal false, Reforge::Context.with_context(ctx) { client.enabled?('just_my_domain') }
 
     ctx = { user: { domain: 'prefab.cloud' } }
     assert_equal false, client.enabled?('just_my_domain', ctx)
-    assert_equal false, Prefab::Context.with_context(ctx) { client.enabled?('just_my_domain') }
+    assert_equal false, Reforge::Context.with_context(ctx) { client.enabled?('just_my_domain') }
 
     ctx = { user: { domain: 'example.com' } }
     assert_equal false, client.enabled?('just_my_domain', ctx)
-    assert_equal false, Prefab::Context.with_context(ctx) { client.enabled?('just_my_domain') }
+    assert_equal false, Reforge::Context.with_context(ctx) { client.enabled?('just_my_domain') }
   end
 
   def test_ff_get_with_context
@@ -108,15 +108,15 @@ class TestClient < Minitest::Test
 
     ctx = { user: { domain: 'gmail.com' } }
     assert_equal 'DEFAULT', client.get('just_my_domain', 'DEFAULT', ctx)
-    assert_equal 'DEFAULT', Prefab::Context.with_context(ctx) { client.get('just_my_domain', 'DEFAULT') }
+    assert_equal 'DEFAULT', Reforge::Context.with_context(ctx) { client.get('just_my_domain', 'DEFAULT') }
 
     ctx = { user: { domain: 'prefab.cloud' } }
     assert_equal 'new-version', client.get('just_my_domain', 'DEFAULT', ctx)
-    assert_equal 'new-version', Prefab::Context.with_context(ctx) { client.get('just_my_domain', 'DEFAULT') }
+    assert_equal 'new-version', Reforge::Context.with_context(ctx) { client.get('just_my_domain', 'DEFAULT') }
 
     ctx = { user: { domain: 'example.com' } }
     assert_equal 'new-version', client.get('just_my_domain', 'DEFAULT', ctx)
-    assert_equal 'new-version', Prefab::Context.with_context(ctx) { client.get('just_my_domain', 'DEFAULT') }
+    assert_equal 'new-version', Reforge::Context.with_context(ctx) { client.get('just_my_domain', 'DEFAULT') }
   end
 
   def test_deprecated_no_dot_notation_ff_enabled_with_jit_context
@@ -145,9 +145,9 @@ class TestClient < Minitest::Test
       prefab_datasources: LOCAL_ONLY
     }
 
-    options = Prefab::Options.new(options_hash)
+    options = Reforge::Options.new(options_hash)
 
-    client = Prefab::Client.new(options)
+    client = Reforge::Client.new(options)
 
     assert_equal client.namespace, 'test-namespace'
   end
@@ -158,7 +158,7 @@ class TestClient < Minitest::Test
       prefab_datasources: LOCAL_ONLY
     }
 
-    client = Prefab::Client.new(options_hash)
+    client = Reforge::Client.new(options_hash)
 
     assert_equal client.namespace, 'test-namespace'
   end
@@ -167,25 +167,25 @@ class TestClient < Minitest::Test
     fake_api_key = '123-development-yourapikey-SDK'
 
     # it is nil by default
-    assert_nil new_client(api_key: fake_api_key).evaluation_summary_aggregator
+    assert_nil new_client(sdk_key: fake_api_key).evaluation_summary_aggregator
 
     # it is nil when local_only even if collect_max_evaluation_summaries is true
     assert_nil new_client(prefab_datasources: LOCAL_ONLY,
                                   collect_evaluation_summaries: true, ).evaluation_summary_aggregator
 
     # it is nil when collect_max_evaluation_summaries is false
-    assert_nil new_client(api_key: fake_api_key,
+    assert_nil new_client(sdk_key: fake_api_key,
                                   prefab_datasources: :all,
                                   collect_evaluation_summaries: false).evaluation_summary_aggregator
 
     # it is not nil when collect_max_evaluation_summaries is true and the datasource is not local_only
-    assert_equal Prefab::EvaluationSummaryAggregator,
-                 new_client(api_key: fake_api_key,
+    assert_equal Reforge::EvaluationSummaryAggregator,
+                 new_client(sdk_key: fake_api_key,
                             prefab_datasources: :all,
                             collect_evaluation_summaries: true).evaluation_summary_aggregator.class
 
     assert_logged [
-      "Prefab::ConfigClient -- No success loading checkpoints"
+      "Reforge::ConfigClient -- No success loading checkpoints"
     ]
   end
 
@@ -209,7 +209,7 @@ class TestClient < Minitest::Test
       }
     }
 
-    assert_example_contexts client, [Prefab::Context.new({ user: { 'key' => 99 } })]
+    assert_example_contexts client, [Reforge::Context.new({ user: { 'key' => 99 } })]
   end
 
   def test_get_with_basic_value_with_context
@@ -234,7 +234,7 @@ class TestClient < Minitest::Test
       }
     }
 
-    assert_example_contexts client, [Prefab::Context.new({ user: { 'key' => 99 } })]
+    assert_example_contexts client, [Reforge::Context.new({ user: { 'key' => 99 } })]
   end
 
   def test_get_with_weighted_values
@@ -303,9 +303,9 @@ class TestClient < Minitest::Test
     }
 
     assert_example_contexts client, [
-      Prefab::Context.new(user: { 'key' => '1' }),
-      Prefab::Context.new(user: { 'key' => '12' }),
-      Prefab::Context.new(user: { 'key' => '4', admin: true })
+      Reforge::Context.new(user: { 'key' => '1' }),
+      Reforge::Context.new(user: { 'key' => '12' }),
+      Reforge::Context.new(user: { 'key' => '4', admin: true })
     ]
   end
 
@@ -380,8 +380,8 @@ class TestClient < Minitest::Test
     }
 
     assert_example_contexts client, [
-      Prefab::Context.new(user: { key: 'abc', email: 'example@prefab.cloud' }),
-      Prefab::Context.new(user: { key: 'def', email: 'example@hotmail.com' })
+      Reforge::Context.new(user: { key: 'abc', email: 'example@prefab.cloud' }),
+      Reforge::Context.new(user: { key: 'def', email: 'example@hotmail.com' })
     ]
   end
 

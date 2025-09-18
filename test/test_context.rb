@@ -7,68 +7,68 @@ class TestContext < Minitest::Test
 
   def setup
     super
-    Prefab::Context.current = nil
+    Reforge::Context.current = nil
   end
 
   def test_initialize_with_empty_context
-    context = Prefab::Context.new({})
+    context = Reforge::Context.new({})
     assert_empty context.contexts
   end
 
   def test_initialize_with_hash
-    context = Prefab::Context.new(test: { foo: 'bar' })
+    context = Reforge::Context.new(test: { foo: 'bar' })
     assert_equal 1, context.contexts.size
     assert_equal 'bar', context.get("test.foo")
   end
 
   def test_initialize_with_multiple_hashes
-    context = Prefab::Context.new(test: { foo: 'bar' }, other: { foo: 'baz' })
+    context = Reforge::Context.new(test: { foo: 'bar' }, other: { foo: 'baz' })
     assert_equal 2, context.contexts.size
     assert_equal 'bar', context.get("test.foo")
     assert_equal 'baz', context.get("other.foo")
   end
 
   def test_initialize_with_invalid_argument
-    assert_raises(ArgumentError) { Prefab::Context.new([]) }
+    assert_raises(ArgumentError) { Reforge::Context.new([]) }
   end
 
   def test_current
-    context = Prefab::Context.current
-    assert_instance_of Prefab::Context, context
+    context = Reforge::Context.current
+    assert_instance_of Reforge::Context, context
     assert_empty context.to_h
   end
 
   def test_current_set
-    context = Prefab::Context.new(EXAMPLE_PROPERTIES)
-    Prefab::Context.current = context.to_h
-    assert_instance_of Prefab::Context, context
+    context = Reforge::Context.new(EXAMPLE_PROPERTIES)
+    Reforge::Context.current = context.to_h
+    assert_instance_of Reforge::Context, context
     assert_equal stringify(EXAMPLE_PROPERTIES), context.to_h
   end
 
   def test_with_context
-    Prefab::Context.with_context(EXAMPLE_PROPERTIES) do
-      context = Prefab::Context.current
+    Reforge::Context.with_context(EXAMPLE_PROPERTIES) do
+      context = Reforge::Context.current
       assert_equal(stringify(EXAMPLE_PROPERTIES), context.to_h)
       assert_equal('some-user-key', context.get('user.key'))
     end
   end
 
   def test_with_context_nesting
-    Prefab::Context.with_context(EXAMPLE_PROPERTIES) do
-      Prefab::Context.with_context({ user: { key: 'abc', other: 'different' } }) do
-        context = Prefab::Context.current
+    Reforge::Context.with_context(EXAMPLE_PROPERTIES) do
+      Reforge::Context.with_context({ user: { key: 'abc', other: 'different' } }) do
+        context = Reforge::Context.current
         assert_equal({ 'user' => { 'key' => 'abc', 'other' => 'different' } }, context.to_h)
       end
 
-      context = Prefab::Context.current
+      context = Reforge::Context.current
       assert_equal(stringify(EXAMPLE_PROPERTIES), context.to_h)
     end
   end
 
   def test_with_context_merge_nesting
-    Prefab::Context.with_context(EXAMPLE_PROPERTIES) do
-      Prefab::Context.with_merged_context({ user: { key: 'hij', other: 'different' } }) do
-        context = Prefab::Context.current
+    Reforge::Context.with_context(EXAMPLE_PROPERTIES) do
+      Reforge::Context.with_merged_context({ user: { key: 'hij', other: 'different' } }) do
+        context = Reforge::Context.current
         assert_nil context.get('user.name')
         assert_equal context.get('user.key'), 'hij'
         assert_equal context.get('user.other'), 'different'
@@ -77,36 +77,36 @@ class TestContext < Minitest::Test
         assert_equal context.get('team.plan'), 'pro'
       end
 
-      context = Prefab::Context.current
+      context = Reforge::Context.current
       assert_equal(stringify(EXAMPLE_PROPERTIES), context.to_h)
     end
   end
 
   def test_setting
-    context = Prefab::Context.new({})
+    context = Reforge::Context.new({})
     context.set('user', { key: 'value' })
     context.set(:other, { key: 'different', something: 'other' })
     assert_equal(stringify({ user: { key: 'value' }, other: { key: 'different', something: 'other' } }), context.to_h)
   end
 
   def test_getting
-    context = Prefab::Context.new(EXAMPLE_PROPERTIES)
+    context = Reforge::Context.new(EXAMPLE_PROPERTIES)
     assert_equal('some-user-key', context.get('user.key'))
     assert_equal('pro', context.get('team.plan'))
   end
 
   def test_dot_notation_getting
-    context = Prefab::Context.new({ 'user' => { 'key' => 'value' } })
+    context = Reforge::Context.new({ 'user' => { 'key' => 'value' } })
     assert_equal('value', context.get('user.key'))
   end
 
   def test_dot_notation_getting_with_symbols
-    context = Prefab::Context.new({ user: { key: 'value' } })
+    context = Reforge::Context.new({ user: { key: 'value' } })
     assert_equal('value', context.get('user.key'))
   end
 
   def test_clear
-    context = Prefab::Context.new(EXAMPLE_PROPERTIES)
+    context = Reforge::Context.new(EXAMPLE_PROPERTIES)
     context.clear
 
     assert_empty context.to_h
@@ -115,7 +115,7 @@ class TestContext < Minitest::Test
   def test_to_proto
     namespace = "my.namespace"
 
-    contexts = Prefab::Context.new({
+    contexts = Reforge::Context.new({
                                      user: {
                                        id: 1,
                                        email: 'user-email'
@@ -150,16 +150,16 @@ class TestContext < Minitest::Test
     global_context = { cpu: { count: 4, speed: '2.4GHz' }, clock: { timezone: 'UTC' }, magic: { key: "global-key" } }
     default_context = { 'prefab-api-key' => { 'user-id' => 123 } }
 
-    Prefab::Context.global_context = global_context
-    Prefab::Context.default_context = default_context
+    Reforge::Context.global_context = global_context
+    Reforge::Context.default_context = default_context
 
-    Prefab::Context.current = {
+    Reforge::Context.current = {
       user: { id: 2, email: 'parent-email' },
       magic: { key: 'parent-key', rabbits: 3 },
       clock: { timezone: 'PST' }
     }
 
-    contexts = Prefab::Context.join(hash: {
+    contexts = Reforge::Context.join(hash: {
                                       user: {
                                         id: 1,
                                         email: 'user-email'
@@ -168,7 +168,7 @@ class TestContext < Minitest::Test
                                         id: 2,
                                         name: 'team-name'
                                       }
-                                    }, id: :jit, parent: Prefab::Context.current)
+                                    }, id: :jit, parent: Reforge::Context.current)
 
     expected = PrefabProto::ContextSet.new(
       contexts: [
@@ -232,11 +232,11 @@ class TestContext < Minitest::Test
     local_context = { clock: { timezone: 'PST' }, user: { name: 'Ted', email: 'ted@example.com' } }
     jit_context = { user: { name: 'Frank' } }
 
-    Prefab::Context.global_context = global_context
-    Prefab::Context.default_context = default_context
-    Prefab::Context.current = local_context
+    Reforge::Context.global_context = global_context
+    Reforge::Context.default_context = default_context
+    Reforge::Context.current = local_context
 
-    context = Prefab::Context.join(parent: Prefab::Context.current, hash: jit_context, id: :jit)
+    context = Reforge::Context.join(parent: Reforge::Context.current, hash: jit_context, id: :jit)
 
     # This digs all the way to the global context
     assert_equal 4, context.get('cpu.count')
