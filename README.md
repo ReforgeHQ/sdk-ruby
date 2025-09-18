@@ -1,9 +1,9 @@
 # prefab-cloud-ruby
 
-Ruby Client for Prefab Feature Flags, Dynamic log levels, and Config as a Service: https://www.prefab.cloud
+Ruby Client for Reforge Feature Flags, Dynamic log levels, and Config as a Service: https://launch.reforge.com
 
 ```ruby
-client = Prefab::Client.new
+client = Reforge::Client.new
 
 context = {
   user: {
@@ -24,7 +24,6 @@ See full documentation https://docs.prefab.cloud/docs/sdks/ruby
 ## Supports
 
 - Feature Flags
-- Dynamic log levels
 - Live Config
 - WebUI for tweaking config, log levels, and feature flags
 
@@ -40,72 +39,18 @@ Prefab.init # reads REFORGE_SDK_KEY env var by default
 ```ruby
 #puma.rb
 on_worker_boot do
-  Prefab.fork
+  Reforge.fork
 end
 ```
 
 ```ruby
 # unicorn.rb
 after_fork do |server, worker|
-  Prefab.fork
+  Reforge.fork
 end
 ```
 
-## Logging & Debugging
 
-To use dynamic logging, we recommend [semantic logger]. Add semantic_logger to your Gemfile and then we'll configure our app to use it.
-
-### Plain ol' Ruby
-
-```ruby
-# Gemfile
-gem "semantic_logger"
-```
-
-```ruby
-require "semantic_logger"
-require "prefab"
-
-Prefab.init
-
-SemanticLogger.sync!
-SemanticLogger.default_level = :trace # Prefab will take over the filtering
-SemanticLogger.add_appender(
-  io: $stdout,
-  formatter: :json,
-  filter: Prefab.log_filter,
-)
-```
-
-### With Rails
-
-```ruby
-# Gemfile
-gem "amazing_print"
-gem "rails_semantic_logger"
-```
-
-```ruby
-# config/application.rb
-Prefab.init
-
-# config/initializers/logging.rb
-SemanticLogger.sync!
-SemanticLogger.default_level = :trace # Prefab will take over the filtering
-SemanticLogger.add_appender(
-  io: $stdout,
-  formatter: Rails.env.development? ? :color : :json,
-  filter: Prefab.log_filter,
-)
-```
-
-```ruby
-#puma.rb
-on_worker_boot do
-    SemanticLogger.reopen
-    Prefab.fork
-end
-```
 
 ## Contributing to prefab-cloud-ruby
 

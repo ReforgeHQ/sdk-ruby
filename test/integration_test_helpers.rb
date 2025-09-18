@@ -18,29 +18,8 @@ module IntegrationTestHelpers
       .select { |file| file =~ /\.ya?ml$/ }
   end
 
-  SEVERITY_LOOKUP = Reforge::LogPathAggregator::SEVERITY_KEY.invert
-
   def self.prepare_post_data(it)
     case it.aggregator
-    when "log_path"
-      aggregator = it.test_client.log_path_aggregator
-
-      it.data.each do |data|
-        data['counts'].each_pair do |severity, count|
-          count.times { aggregator.push(data['logger_name'], SEVERITY_LOOKUP[severity]) }
-        end
-      end
-
-      expected_loggers = Hash.new { |h, k| h[k] = PrefabProto::Logger.new }
-
-      it.expected_data.each do |data|
-        data["counts"].each do |(severity, count)|
-          expected_loggers[data["logger_name"]][severity] = count
-          expected_loggers[data["logger_name"]]["logger_name"] = data["logger_name"]
-        end
-      end
-
-      [aggregator, ->(data) { data.events[0].loggers.loggers }, expected_loggers.values]
     when "context_shape"
       aggregator = it.test_client.context_shape_aggregator
 

@@ -17,9 +17,9 @@ module Reforge
       @instance_hash = ::UUID.new.generate
 
       if @options.local_only?
-        LOG.debug 'Prefab Running in Local Mode'
+        LOG.debug 'Reforge SDK Running in Local Mode'
       elsif @options.datafile?
-        LOG.debug 'Prefab Running in DataFile Mode'
+        LOG.debug 'Reforge SDK Running in DataFile Mode'
       else
         @sdk_key = @options.sdk_key
         raise Reforge::Errors::InvalidSdkKeyError, @sdk_key if @sdk_key.nil? || @sdk_key.empty? || sdk_key.count('-') < 1
@@ -51,17 +51,6 @@ module Reforge
 
     def feature_flag_client
       @feature_flag_client ||= Reforge::FeatureFlagClient.new(self)
-    end
-
-    def log_path_aggregator
-      return nil if @options.collect_max_paths <= 0
-
-      @log_path_aggregator ||= LogPathAggregator.new(client: self, max_paths: @options.collect_max_paths,
-                                                     sync_interval: @options.collect_sync_interval)
-    end
-
-    def log
-      @log ||= Reforge::LoggerClient.new(client: self, log_path_aggregator: log_path_aggregator)
     end
 
     def context_shape_aggregator

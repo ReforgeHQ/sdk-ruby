@@ -40,7 +40,7 @@ module Reforge
       def value_from(key, raw)
         case raw
         when String
-          if key.to_s.start_with? Reforge::LoggerClient::BASE_KEY
+          if key.to_s.start_with? 'log-level'
             prefab_log_level_resolve = PrefabProto::LogLevel.resolve(raw.upcase.to_sym) || PrefabProto::LogLevel::NOT_SET_LOG_LEVEL
             { log_level: prefab_log_level_resolve }
           else

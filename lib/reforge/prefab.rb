@@ -51,11 +51,7 @@ module Reforge
   def self.log_filter
     InternalLogger.using_reforge_log_filter!
     return Proc.new do |log|
-      if defined?(@singleton) && !@singleton.nil? && @singleton.config_client.initialized?
-        @singleton.log.semantic_filter(log)
-      else
-        bootstrap_log_level(log)
-      end
+      bootstrap_log_level(log)
     end
   end
 
