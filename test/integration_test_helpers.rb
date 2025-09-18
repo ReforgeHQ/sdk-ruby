@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module IntegrationTestHelpers
-  SUBMODULE_PATH = 'test/prefab-cloud-integration-test-data'
+  SUBMODULE_PATH = 'test/shared-integration-test-data'
 
   def self.find_integration_tests
     files = find_test_files
