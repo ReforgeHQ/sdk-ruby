@@ -43,8 +43,8 @@ module Reforge
     DEFAULT_MAX_EVAL_SUMMARIES = 100_000
 
     DEFAULT_SOURCES = [
-      "https://belt.prefab.cloud",
-      "https://suspenders.prefab.cloud",
+      "https://primary.reforge.com",
+      "https://secondary.reforge.com",
     ].freeze
 
     private def init(
@@ -116,9 +116,9 @@ module Reforge
       @config_sources = @sources
 
       @telemetry_destination = @sources.select do |source|
-        source.start_with?('https://') && (source.include?("belt") || source.include?("suspenders"))
+        source.start_with?('https://') && (source.include?("primary") || source.include?("secondary") || source.include?("belt") || source.include?("suspenders"))
       end.map do |source|
-        source.sub(/(belt|suspenders)\./, 'telemetry.')
+        source.sub(/(primary|secondary)\./, 'telemetry.').sub(/(belt|suspenders)\./, 'telemetry.')
       end[0]
 
       if reforge_api_url

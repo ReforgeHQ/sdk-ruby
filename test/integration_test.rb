@@ -136,8 +136,8 @@ class IntegrationTest
       prefab_datasources: Reforge::Options::DATASOURCES::ALL,
       sdk_key: ENV['REFORGE_INTEGRATION_TEST_SDK_KEY'],
       sources: [
-        'https://belt.staging-prefab.cloud',
-        'https://suspenders.staging-prefab.cloud',
+        'https://primary.goatsofreforge.com',
+        'https://secondary.goatsofreforge.com',
       ],
       global_context: @global_context || {},
     }.merge(@client_overrides))
