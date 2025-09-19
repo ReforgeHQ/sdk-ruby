@@ -55,30 +55,13 @@ module Reforge
 
     def load_classpath_config
       return {} if @prefab_options.datafile?
-      classpath_dir = @prefab_options.prefab_config_classpath_dir
-      rtn = load_glob(File.join(classpath_dir, '.prefab.default.config.yaml'))
-      @prefab_options.prefab_envs.each do |env|
-        rtn = rtn.merge load_glob(File.join(classpath_dir, ".prefab.#{env}.config.yaml"))
-      end
-      rtn
+      {}
     end
 
     def load_local_overrides
       return {} if @prefab_options.datafile?
-      override_dir = @prefab_options.prefab_config_override_dir
-      rtn = load_glob(File.join(override_dir, '.prefab.default.config.yaml'))
-      @prefab_options.prefab_envs.each do |env|
-        rtn = rtn.merge load_glob(File.join(override_dir, ".prefab.#{env}.config.yaml"))
-      end
-      rtn
+      {}
     end
 
-    def load_glob(glob)
-      rtn = {}
-      Dir.glob(glob).each do |file|
-        Reforge::YAMLConfigParser.new(file, @base_client).merge(rtn)
-      end
-      rtn
-    end
   end
 end

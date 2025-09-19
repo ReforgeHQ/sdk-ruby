@@ -6,9 +6,6 @@ class TestConfigClient < Minitest::Test
   def setup
     super
     options = Reforge::Options.new(
-      prefab_config_override_dir: 'none',
-      prefab_config_classpath_dir: 'test',
-      prefab_envs: 'unit_tests',
       prefab_datasources: Reforge::Options::DATASOURCES::LOCAL_ONLY,
       x_use_local_cache: true,
     )
@@ -16,13 +13,6 @@ class TestConfigClient < Minitest::Test
     @config_client = Reforge::ConfigClient.new(MockBaseClient.new(options), 10)
   end
 
-  def test_load
-    assert_equal 'test sample value', @config_client.get('sample')
-    assert_equal 123, @config_client.get('sample_int')
-    assert_equal 12.12, @config_client.get('sample_double')
-    assert_equal true, @config_client.get('sample_bool')
-    assert_equal :ERROR, @config_client.get('log-level.app')
-  end
 
   def test_initialization_timeout_error
     options = Reforge::Options.new(
@@ -37,20 +27,6 @@ class TestConfigClient < Minitest::Test
     assert_match(/couldn't initialize in 0.01 second timeout/, err.message)
   end
 
-  def test_prefab_envs_is_forgiving
-    assert_equal ['my_env'], Reforge::Options.new(
-      prefab_envs: 'my_env'
-    ).prefab_envs
-
-    assert_equal %w[my_env a_second_env], Reforge::Options.new(
-      prefab_envs: %w[my_env a_second_env]
-    ).prefab_envs
-  end
-
-  def test_prefab_envs_env_var
-    ENV['PREFAB_ENVS'] = 'one,two'
-    assert_equal %w[one two], Reforge::Options.new.prefab_envs
-  end
 
   def test_invalid_api_key_error
     options = Reforge::Options.new(

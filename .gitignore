@@ -60,3 +60,6 @@ lib/tes*
 #For rubymine
 *.iml
 .idea/**
+
+# Claude Code settings
+.claude/

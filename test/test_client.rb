@@ -24,27 +24,7 @@ class TestClient < Minitest::Test
     ]
   )
 
-  def test_get
-    _, err = capture_io do
-      client = new_client
-      assert_equal 'default', client.get('does.not.exist', 'default')
-      assert_equal 'test sample value', client.get('sample')
-      assert_equal 123, client.get('sample_int')
-    end
-    assert_equal '', err
-  end
 
-  def test_get_with_default
-    client = new_client
-    # A `false` value is not replaced with the default
-    assert_equal false, client.get('false_value', 'red')
-
-    # A falsy value is not replaced with the default
-    assert_equal 0, client.get('zero_value', 'red')
-
-    # A missing value returns the default
-    assert_equal 'buckets', client.get('missing_value', 'buckets')
-  end
 
   def test_get_with_missing_default
     client = new_client
@@ -61,83 +41,9 @@ class TestClient < Minitest::Test
     assert_nil client.get('missing_value')
   end
 
-  def test_enabled
-    client = new_client
-    assert_equal false, client.enabled?('does_not_exist')
-    assert_equal true, client.enabled?('enabled_flag')
-    assert_equal false, client.enabled?('disabled_flag')
-    assert_equal false, client.enabled?('flag_with_a_value')
-  end
 
-  def test_ff_enabled_with_user_key_match
-    client = new_client
 
-    ctx = { user: { key: 'jimmy' } }
-    assert_equal false, client.enabled?('user_key_match', ctx)
-    assert_equal false, Reforge::Context.with_context(ctx) { client.enabled?('user_key_match') }
 
-    ctx = { user: { key: 'abc123' } }
-    assert_equal true, client.enabled?('user_key_match', ctx)
-    assert_equal true, Reforge::Context.with_context(ctx) { client.enabled?('user_key_match') }
-
-    ctx = { user: { key: 'xyz987' } }
-    assert_equal true, client.enabled?('user_key_match', ctx)
-    assert_equal true, Reforge::Context.with_context(ctx) { client.enabled?('user_key_match') }
-  end
-
-  # NOTE: these are all `false` because we're doing a enabled? on a FF with string variants
-  # see test_ff_get_with_context for the raw value tests
-  def test_ff_enabled_with_context
-    client = new_client
-
-    ctx = { user: { domain: 'gmail.com' } }
-    assert_equal false, client.enabled?('just_my_domain', ctx)
-    assert_equal false, Reforge::Context.with_context(ctx) { client.enabled?('just_my_domain') }
-
-    ctx = { user: { domain: 'prefab.cloud' } }
-    assert_equal false, client.enabled?('just_my_domain', ctx)
-    assert_equal false, Reforge::Context.with_context(ctx) { client.enabled?('just_my_domain') }
-
-    ctx = { user: { domain: 'example.com' } }
-    assert_equal false, client.enabled?('just_my_domain', ctx)
-    assert_equal false, Reforge::Context.with_context(ctx) { client.enabled?('just_my_domain') }
-  end
-
-  def test_ff_get_with_context
-    client = new_client
-
-    ctx = { user: { domain: 'gmail.com' } }
-    assert_equal 'DEFAULT', client.get('just_my_domain', 'DEFAULT', ctx)
-    assert_equal 'DEFAULT', Reforge::Context.with_context(ctx) { client.get('just_my_domain', 'DEFAULT') }
-
-    ctx = { user: { domain: 'prefab.cloud' } }
-    assert_equal 'new-version', client.get('just_my_domain', 'DEFAULT', ctx)
-    assert_equal 'new-version', Reforge::Context.with_context(ctx) { client.get('just_my_domain', 'DEFAULT') }
-
-    ctx = { user: { domain: 'example.com' } }
-    assert_equal 'new-version', client.get('just_my_domain', 'DEFAULT', ctx)
-    assert_equal 'new-version', Reforge::Context.with_context(ctx) { client.get('just_my_domain', 'DEFAULT') }
-  end
-
-  def test_deprecated_no_dot_notation_ff_enabled_with_jit_context
-    client = new_client
-    # with no lookup key
-    assert_equal false, client.enabled?('deprecated_no_dot_notation', { domain: 'gmail.com' })
-    assert_equal true, client.enabled?('deprecated_no_dot_notation', { domain: 'prefab.cloud' })
-    assert_equal true, client.enabled?('deprecated_no_dot_notation', { domain: 'example.com' })
-
-    assert_stderr [
-      "[DEPRECATION] Prefab contexts should be a hash with a key of the context name and a value of a hash.",
-      "[DEPRECATION] Prefab contexts should be a hash with a key of the context name and a value of a hash.",
-      "[DEPRECATION] Prefab contexts should be a hash with a key of the context name and a value of a hash."
-    ]
-  end
-
-  def test_getting_feature_flag_value
-    client = new_client
-    assert_equal false, client.enabled?('flag_with_a_value')
-    assert_equal 'all-features', client.get('flag_with_a_value')
-  end
 
   def test_initialization_with_an_options_object
     options_hash = {
@@ -411,21 +317,7 @@ class TestClient < Minitest::Test
     assert_summary client, {}
   end
 
-  def test_defined
-    client = new_client
 
-    refute client.defined?('does_not_exist')
-    assert client.defined?('sample_int')
-    assert client.defined?('disabled_flag')
-  end
-
-  def test_is_ff
-    client = new_client
-
-    assert client.is_ff?('flag_with_a_value')
-    refute client.is_ff?('sample_int')
-    refute client.is_ff?('does_not_exist')
-  end
 
   def test_with_datafile
     datafile = "#{Dir.pwd}/test/fixtures/datafile.json"
