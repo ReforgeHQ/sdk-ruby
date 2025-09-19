@@ -148,7 +148,7 @@ module Reforge
       case criterion.property_name
       when NAMESPACE_KEY
         @namespace
-      when 'prefab.current-time','reforge-sdk.current-time'
+      when 'prefab.current-time','reforge.current-time'
         Time.now.utc.to_i * 1000
       else
         properties.get(criterion.property_name)

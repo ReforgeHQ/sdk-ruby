@@ -51,7 +51,7 @@ module Reforge
       sources: nil,
       sdk_key: ENV['SDK_API_KEY'] || ENV['PREFAB_API_KEY'],
       namespace: '',
-      prefab_api_url: nil,
+      reforge_api_url: nil,
       on_no_default: ON_NO_DEFAULT::RAISE, # options :raise, :warn_and_return_nil,
       initialization_timeout_sec: 10, # how long to wait before on_init_failure
       on_init_failure: ON_INITIALIZATION_FAILURE::RAISE,
@@ -121,8 +121,8 @@ module Reforge
         source.sub(/(belt|suspenders)\./, 'telemetry.')
       end[0]
 
-      if prefab_api_url
-        warn '[DEPRECATION] prefab_api_url is deprecated. Please provide `sources` if you need to override the default sources'
+      if reforge_api_url
+        warn '[DEPRECATION] reforge_api_url is deprecated. Please provide `sources` if you need to override the default sources'
       end
 
       case context_upload_mode
