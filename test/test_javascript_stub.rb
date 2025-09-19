@@ -103,8 +103,6 @@ class JavascriptStubTest < Minitest::Test
       config: [log_level, config_for_sdk, config_not_for_sdk, ff, json_config, duration_config],
       project_env_id: PROJECT_ENV_ID,
       collect_evaluation_summaries: true,
-      prefab_config_override_dir: '/tmp',
-      prefab_config_classpath_dir: '/tmp',
       context_upload_mode: :periodic_example,
       allow_telemetry_in_local_mode: true
     )

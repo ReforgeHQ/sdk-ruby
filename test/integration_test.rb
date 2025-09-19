@@ -130,9 +130,6 @@ class IntegrationTest
 
   def base_client_options
     @_options ||= Reforge::Options.new(**{
-      prefab_config_override_dir: 'none',
-      prefab_config_classpath_dir: 'test',
-      prefab_envs: ['unit_tests'],
       prefab_datasources: Reforge::Options::DATASOURCES::ALL,
       sdk_key: ENV['REFORGE_INTEGRATION_TEST_SDK_KEY'],
       sources: [

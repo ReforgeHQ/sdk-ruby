@@ -12,9 +12,6 @@ module Reforge
     attr_reader :on_no_default
     attr_reader :initialization_timeout_sec
     attr_reader :on_init_failure
-    attr_reader :prefab_config_override_dir
-    attr_reader :prefab_config_classpath_dir
-    attr_reader :prefab_envs
     attr_reader :collect_sync_interval
     attr_reader :use_local_cache
     attr_reader :datafile
@@ -56,9 +53,6 @@ module Reforge
       initialization_timeout_sec: 10, # how long to wait before on_init_failure
       on_init_failure: ON_INITIALIZATION_FAILURE::RAISE,
       prefab_datasources: (ENV['REFORGE_DATASOURCES'] || ENV['PREFAB_DATASOURCES']) == 'LOCAL_ONLY' ? DATASOURCES::LOCAL_ONLY : DATASOURCES::ALL,
-      prefab_config_override_dir: Dir.home,
-      prefab_config_classpath_dir: '.', # where to load local overrides
-      prefab_envs: ENV['PREFAB_ENVS'].nil? ? [] : ENV['PREFAB_ENVS'].split(','),
       collect_logger_counts: true,
       collect_max_paths: DEFAULT_MAX_PATHS,
       collect_sync_interval: nil,
@@ -86,9 +80,6 @@ module Reforge
         warn '[DEPRECATION] x_datafile is deprecated. Please provide `datafile` instead'
       end
 
-      @prefab_config_classpath_dir = prefab_config_classpath_dir
-      @prefab_config_override_dir = prefab_config_override_dir
-      @prefab_envs = Array(prefab_envs)
       @collect_logger_counts = collect_logger_counts
       @collect_max_paths = collect_max_paths
       @collect_sync_interval = collect_sync_interval
