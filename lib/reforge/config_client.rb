@@ -129,7 +129,7 @@ module Reforge
 
     def load_source_checkpoint(start_at_id: 0)
       @options.config_sources.each do |source|
-        conn = Reforge::CachingHttpConnection.new("#{source}/api/v1/configs/#{start_at_id}", @base_client.sdk_key)
+        conn = Reforge::CachingHttpConnection.new("#{source}/api/v2/configs/#{start_at_id}", @base_client.sdk_key)
         result = load_url(conn, :remote_api)
         return true if result
       end

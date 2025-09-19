@@ -154,7 +154,7 @@ class TestSSEConfigClient < Minitest::Test
     log_string = StringIO.new
     logger = WEBrick::Log.new(log_string)
     server = WEBrick::HTTPServer.new(Port: port, Logger: logger, AccessLog: [])
-    server.mount '/api/v1/sse/config', endpoint_class
+    server.mount '/api/v2/sse/config', endpoint_class
 
     [server, log_string]
   end
