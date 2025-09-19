@@ -7,7 +7,7 @@ require 'ostruct'
 class TestSSEConfigClient < Minitest::Test
   def test_client
     sources = [
-      'https://belt.staging-prefab.cloud/'
+      'https://primary.goatsofreforge.com'
     ]
 
     options = Reforge::Options.new(sources: sources, sdk_key: ENV.fetch('REFORGE_INTEGRATION_TEST_SDK_KEY', nil))
@@ -17,7 +17,7 @@ class TestSSEConfigClient < Minitest::Test
     client = Reforge::SSEConfigClient.new(options, config_loader)
 
     assert_equal 4, client.headers['Last-Event-ID']
-    assert_equal "https://stream.staging-prefab.cloud", client.source
+    assert_equal "https://stream.goatsofreforge.com", client.source
 
     result = nil
 
@@ -37,7 +37,7 @@ class TestSSEConfigClient < Minitest::Test
   def test_failing_over
     sources = [
       'https://does.not.exist.staging-prefab.cloud/',
-      'https://api.staging-prefab.cloud/'
+      'https://api.goatsofreforge.com/'
     ]
 
     prefab_options = Reforge::Options.new(sources: sources, sdk_key: ENV.fetch('REFORGE_INTEGRATION_TEST_SDK_KEY', nil))
