@@ -1,6 +1,6 @@
-# prefab-cloud-ruby
+# Reforge SDK for Ruby
 
-Ruby Client for Reforge Feature Flags, Dynamic log levels, and Config as a Service: https://launch.reforge.com
+Ruby Client for Reforge Feature Flags and Config as a Service: https://launch.reforge.com
 
 ```ruby
 client = Reforge::Client.new
@@ -25,7 +25,7 @@ See full documentation https://docs.prefab.cloud/docs/sdks/ruby
 
 - Feature Flags
 - Live Config
-- WebUI for tweaking config, log levels, and feature flags
+- WebUI for tweaking config and feature flags
 
 ## Important note about Forking and realtime updates
 
@@ -52,7 +52,7 @@ end
 
 
 
-## Contributing to prefab-cloud-ruby
+## Contributing to reforge sdk for ruby
 
 - Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
 - Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
@@ -74,6 +74,5 @@ REMOTE_BRANCH=main LOCAL_BRANCH=main bundle exec rake release
 
 ## Copyright
 
-Copyright (c) 2024 Prefab, Inc. See LICENSE.txt for further details.
+Copyright (c) 2025 Reforge Inc. See LICENSE.txt for further details.
 
-[semantic logger]: https://logger.rocketjob.io/
