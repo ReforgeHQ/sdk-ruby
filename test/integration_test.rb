@@ -57,7 +57,7 @@ class IntegrationTest
   def parse_client_overrides(overrides)
     Hash[
       (overrides || {}).map do |(k, v)|
-        if k.to_s == "prefab_api_url"
+        if k.to_s == "reforge_api_url"
           [:sources, [v]]
         else
           [k.to_sym, v]
