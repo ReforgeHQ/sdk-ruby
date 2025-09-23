@@ -27,6 +27,20 @@ See full documentation https://docs.prefab.cloud/docs/sdks/ruby
 - Live Config
 - WebUI for tweaking config and feature flags
 
+## Installation
+
+Add the gem to your Gemfile:
+
+```ruby
+gem 'sdk-reforge'
+```
+
+Or install directly:
+
+```bash
+gem install sdk-reforge
+```
+
 ## Important note about Forking and realtime updates
 
 Many ruby web servers fork. When the process is forked, the current realtime update stream is disconnected. If you're using Puma or Unicorn, do the following.
@@ -64,12 +78,25 @@ end
 
 ## Release
 
+Release is automated via GitHub Actions using RubyGems trusted publishing. When tests pass on the main branch, a new version is automatically published to RubyGems.
+
+To release a new version:
+
 ```shell
-update the changelog
-update VERSION
+# Update the version
+echo "1.9.1" > VERSION
+
+# Update the changelog with your changes
+# Edit CHANGELOG.md
+
+# Regenerate the gemspec
 bundle exec rake gemspec:generate
-git commit & push
-REMOTE_BRANCH=main LOCAL_BRANCH=main bundle exec rake release
+
+# Create PR with changes
+git checkout -b release-1.9.1
+git commit -am "Release 1.9.1"
+git push origin release-1.9.1
+# Then create and merge PR to main
 ```
 
 ## Copyright

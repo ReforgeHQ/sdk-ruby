@@ -1,5 +1,14 @@
 # Changelog
 
+
+## 1.9.0 - 2025-08-23
+
+- Moved to reforge gem name `sdk-reforge`
+- Add automated gem publishing via GitHub Actions trusted publishing
+- Add support for `reforge.current-time` virtual context
+- Dropped the previous implementation of dynamic logging support
+- Removed local file loading based on prefab-envs
+
 ## 1.8.9 - 2025-04-15
 
 - Fix support for virtual context `prefab.current-time` [#229]
