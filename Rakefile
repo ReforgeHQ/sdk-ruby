@@ -48,8 +48,16 @@ unless ENV['CI']
     version = File.exist?('VERSION') ? File.read('VERSION') : ''
 
     rdoc.rdoc_dir = 'rdoc'
-    rdoc.title = "prefab-cloud-ruby #{version}"
+    rdoc.title = "sdk-reforge #{version}"
     rdoc.rdoc_files.include('README*')
     rdoc.rdoc_files.include('lib/**/*.rb')
   end
+end
+
+# Add release task for CI
+task :release do
+  sh 'gem build sdk-reforge.gemspec'
+  version = File.read('VERSION').strip
+  gem_file = "sdk-reforge-#{version}.gem"
+  sh "gem push #{gem_file}"
 end
