@@ -29,5 +29,18 @@ jobs:
           bundler-cache: true
           ruby-version: ruby
 
+      - name: Check if version already exists
+        id: version-check
+        run: |
+          VERSION=$(cat VERSION)
+          if gem list -r sdk-reforge | grep -q "sdk-reforge ($VERSION)"; then
+            echo "version-exists=true" >> $GITHUB_OUTPUT
+            echo "Version $VERSION already exists on RubyGems, skipping publish"
+          else
+            echo "version-exists=false" >> $GITHUB_OUTPUT
+            echo "Version $VERSION not found, proceeding with publish"
+          fi
+
       - name: Release gem
+        if: steps.version-check.outputs.version-exists == 'false'
         uses: rubygems/release-gem@v1

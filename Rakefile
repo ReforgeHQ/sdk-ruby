@@ -57,8 +57,8 @@ end
 # Add release task for CI
 task :release do
   sh 'mkdir -p pkg'
-  sh 'gem build sdk-reforge.gemspec --output pkg/'
   version = File.read('VERSION').strip
   gem_file = "pkg/sdk-reforge-#{version}.gem"
+  sh "gem build sdk-reforge.gemspec --output #{gem_file}"
   sh "gem push #{gem_file}"
 end
