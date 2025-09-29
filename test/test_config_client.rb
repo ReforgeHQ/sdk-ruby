@@ -81,4 +81,71 @@ class TestConfigClient < Minitest::Test
     end
   end
 
+  def test_load_url_with_empty_body
+    options = Reforge::Options.new(
+      prefab_datasources: Reforge::Options::DATASOURCES::LOCAL_ONLY,
+      x_use_local_cache: true,
+      sdk_key: "123-ENV-KEY-SDK",)
+
+    config_client = Reforge::ConfigClient.new(MockBaseClient.new(options), 10)
+
+    # Mock connection with empty response body
+    mock_conn = Minitest::Mock.new
+    mock_resp = Minitest::Mock.new
+    mock_resp.expect(:status, 200)
+    mock_resp.expect(:body, '')
+    mock_resp.expect(:body, '')
+    mock_conn.expect(:get, mock_resp, [''])
+    mock_conn.expect(:uri, 'http://test.example.com')
+
+    result = config_client.send(:load_url, mock_conn, :test_source)
+
+    assert_equal false, result, 'Expected load_url to return false for empty body'
+    mock_conn.verify
+    mock_resp.verify
+
+    assert_logged [/Response body is empty/]
+  end
+
+  def test_load_cache_with_empty_file
+    options = Reforge::Options.new(
+      prefab_datasources: Reforge::Options::DATASOURCES::LOCAL_ONLY,
+      x_use_local_cache: true,
+      sdk_key: "123-ENV-KEY-SDK",)
+
+    config_client = Reforge::ConfigClient.new(MockBaseClient.new(options), 10)
+    cache_path = config_client.send(:cache_path)
+
+    # Create an empty cache file
+    FileUtils.mkdir_p(File.dirname(cache_path))
+    File.write(cache_path, '')
+
+    result = config_client.send(:load_cache)
+
+    assert_equal false, result, 'Expected load_cache to return false for empty file'
+    assert_logged [/File is empty/]
+  ensure
+    File.delete(cache_path) if File.exist?(cache_path)
+  end
+
+  def test_load_json_file_with_empty_file
+    options = Reforge::Options.new(
+      prefab_datasources: Reforge::Options::DATASOURCES::LOCAL_ONLY,
+      x_use_local_cache: true,
+      sdk_key: "123-ENV-KEY-SDK",)
+
+    config_client = Reforge::ConfigClient.new(MockBaseClient.new(options), 10)
+
+    # Create a temporary empty datafile
+    temp_file = File.join(Dir.tmpdir, 'test_empty_datafile.json')
+    File.write(temp_file, '')
+
+    result = config_client.send(:load_json_file, temp_file)
+
+    assert_equal false, result, 'Expected load_json_file to return false for empty file'
+    assert_logged [/File is empty/]
+  ensure
+    File.delete(temp_file) if File.exist?(temp_file)
+  end
+
 end

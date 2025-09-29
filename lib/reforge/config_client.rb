@@ -140,6 +140,11 @@ module Reforge
     def load_url(conn, source)
       resp = conn.get('')
       if resp.status == 200
+        if resp.body.nil? || resp.body.empty?
+          LOG.warn "Checkpoint #{source} [#{conn.uri}] failed to load. Response body is empty"
+          return false
+        end
+
         configs = PrefabProto::Configs.decode(resp.body)
         load_configs(configs, source)
         cache_configs(configs)
@@ -218,7 +223,13 @@ module Reforge
       return false unless @options.use_local_cache
       File.open(cache_path) do |f|
         f.flock(File::LOCK_SH)
-        configs = PrefabProto::Configs.decode_json(f.read)
+        content = f.read
+        if content.nil? || content.empty?
+          LOG.warn "Failed to read cached configs at #{cache_path}. File is empty"
+          return false
+        end
+
+        configs = PrefabProto::Configs.decode_json(content)
         load_configs(configs, :cache)
 
         hours_old = ((Time.now - File.mtime(f)) / 60 / 60).round(2)
@@ -235,7 +246,13 @@ module Reforge
     def load_json_file(file)
       File.open(file) do |f|
         f.flock(File::LOCK_SH)
-        configs = PrefabProto::Configs.decode_json(f.read)
+        content = f.read
+        if content.nil? || content.empty?
+          LOG.warn "Failed to read datafile at #{file}. File is empty"
+          return false
+        end
+
+        configs = PrefabProto::Configs.decode_json(content)
         load_configs(configs, :datafile)
       end
     end

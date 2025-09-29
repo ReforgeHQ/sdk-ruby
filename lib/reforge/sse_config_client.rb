@@ -73,7 +73,20 @@ module Reforge
                       reconnect_time: @options.sse_default_reconnect_time,
                       logger: Reforge::InternalLogger.new(SSE::Client)) do |client|
         client.on_event do |event|
-          configs = PrefabProto::Configs.decode(Base64.decode64(event.data))
+          if event.data.nil? || event.data.empty?
+            @logger.error "SSE Streaming Error: Received empty data for url #{url}"
+            client.close
+            return
+          end
+
+          decoded_data = Base64.decode64(event.data)
+          if decoded_data.nil? || decoded_data.empty?
+            @logger.error "SSE Streaming Error: Decoded data is empty for url #{url}"
+            client.close
+            return
+          end
+
+          configs = PrefabProto::Configs.decode(decoded_data)
           load_configs.call(configs, event, :sse)
         end
 
