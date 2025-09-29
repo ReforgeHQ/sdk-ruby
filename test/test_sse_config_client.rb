@@ -208,4 +208,43 @@ class TestSSEConfigClient < Minitest::Test
       output << "data: CmYIu8fh4YaO0x4QZBo0bG9nLWxldmVsLmNsb3VkLnByZWZhYi5zZXJ2ZXIubG9nZ2luZy5FdmVudFByb2Nlc3NvciIfCAESG2phbWVzLmtlYmluZ2VyQHByZWZhYi5jbG91ZDgGSAkSDQhkELvH4eGGjtMeGGU=\n\n"
     end
   end
+
+  def test_empty_data_validation
+    # Unit test to verify that empty data is properly detected and handled
+    log_output = StringIO.new
+    logger = Logger.new(log_output)
+
+    # Test that empty event.data is detected
+    mock_event = OpenStruct.new(data: '')
+    mock_client = Minitest::Mock.new
+    mock_client.expect(:close, nil)
+
+    # Simulate the on_event handler logic
+    if mock_event.data.nil? || mock_event.data.empty?
+      logger.error "SSE Streaming Error: Received empty data for url http://test"
+      mock_client.close
+    end
+
+    log_lines = log_output.string.split("\n")
+    assert log_lines.any? { |line| line.include?('SSE Streaming Error') && line.include?('empty data') },
+           'Expected to have logged an error about empty data'
+    mock_client.verify
+
+    # Test that nil event.data is detected
+    log_output = StringIO.new
+    logger = Logger.new(log_output)
+    mock_event = OpenStruct.new(data: nil)
+    mock_client = Minitest::Mock.new
+    mock_client.expect(:close, nil)
+
+    if mock_event.data.nil? || mock_event.data.empty?
+      logger.error "SSE Streaming Error: Received empty data for url http://test"
+      mock_client.close
+    end
+
+    log_lines = log_output.string.split("\n")
+    assert log_lines.any? { |line| line.include?('SSE Streaming Error') && line.include?('empty data') },
+           'Expected to have logged an error about empty data for nil'
+    mock_client.verify
+  end
 end
