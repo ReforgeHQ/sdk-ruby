@@ -137,7 +137,21 @@ module CommonHelpers
   def assert_summary(client, data)
     raise 'Evaluation summary aggregator not enabled' unless client.evaluation_summary_aggregator
 
-    assert_equal data, client.evaluation_summary_aggregator.data
+    actual = client.evaluation_summary_aggregator.data
+
+    # Compare keys first (order independent)
+    assert_equal data.keys.sort_by(&:to_s), actual.keys.sort_by(&:to_s), "Summary keys mismatch"
+
+    # Then compare each nested hash (order independent)
+    data.each do |key, expected_counters|
+      actual_counters = actual[key]
+
+      # Convert to sets for order-independent comparison
+      expected_set = expected_counters.to_a.to_set
+      actual_set = actual_counters.to_a.to_set
+
+      assert_equal expected_set, actual_set, "Counter mismatch for #{key}"
+    end
   end
 
   def assert_example_contexts(client, data)

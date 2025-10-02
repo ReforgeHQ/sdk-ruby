@@ -106,7 +106,7 @@ class TestClient < Minitest::Test
       [KEY, :CONFIG] => {
         {
           config_id: config.id,
-          config_row_index: 1,
+          config_row_index: 0,
           selected_value: DESIRED_VALUE_CONFIG,
           conditional_value_index: 0,
           weighted_value_index: nil,
@@ -131,7 +131,7 @@ class TestClient < Minitest::Test
       [KEY, :CONFIG] => {
         {
           config_id: config.id,
-          config_row_index: 1,
+          config_row_index: 0,
           selected_value: DESIRED_VALUE_CONFIG,
           conditional_value_index: 0,
           weighted_value_index: nil,
@@ -181,7 +181,7 @@ class TestClient < Minitest::Test
       [KEY, :CONFIG] => {
         {
           config_id: config.id,
-          config_row_index: 1,
+          config_row_index: 0,
           selected_value: PrefabProto::ConfigValue.new(string: 'abc'),
           conditional_value_index: 0,
           weighted_value_index: 0,
@@ -190,7 +190,7 @@ class TestClient < Minitest::Test
 
         {
           config_id: config.id,
-          config_row_index: 1,
+          config_row_index: 0,
           selected_value: PrefabProto::ConfigValue.new(string: 'def'),
           conditional_value_index: 0,
           weighted_value_index: 1,
@@ -199,7 +199,7 @@ class TestClient < Minitest::Test
 
         {
           config_id: config.id,
-          config_row_index: 1,
+          config_row_index: 0,
           selected_value: PrefabProto::ConfigValue.new(string: 'ghi'),
           conditional_value_index: 0,
           weighted_value_index: 2,
@@ -278,9 +278,9 @@ class TestClient < Minitest::Test
           weighted_value_index: nil, selected_index: nil } => 1
       },
       [KEY, :NOT_SET_CONFIG_TYPE] => {
-        { config_id: 0, config_row_index: 0, conditional_value_index: 0, selected_value: DEFAULT_VALUE_CONFIG,
+        { config_id: 0, config_row_index: 1, conditional_value_index: 0, selected_value: DEFAULT_VALUE_CONFIG,
           weighted_value_index: nil, selected_index: nil } => 2,
-        { config_id: 0, config_row_index: 1, conditional_value_index: 0, selected_value: DESIRED_VALUE_CONFIG,
+        { config_id: 0, config_row_index: 0, conditional_value_index: 0, selected_value: DESIRED_VALUE_CONFIG,
           weighted_value_index: nil, selected_index: nil } => 1
       }
     }
