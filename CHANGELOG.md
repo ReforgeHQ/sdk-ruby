@@ -1,5 +1,10 @@
 # Changelog
 
+
+## 1.9.2 - 2025-10-02
+
+- Fix bug in row index calculation for the evaluation summary data
+
 ## 1.9.1 - 2025-10-01
 
 - Fix entrypoint
