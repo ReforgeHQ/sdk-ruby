@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.9.2 - 2025-10-02
+
+- Add explicit base64 require for Ruby 3.4+ compatibility
+
 ## 1.9.1 - 2025-10-01
 
 - Fix entrypoint
