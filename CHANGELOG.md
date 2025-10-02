@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.10.0 - 2025-10-02
+
+- require `base64` for newest ruby versions
+- look for `REFORGE_BACKEND_SDK_KEY` and `REFORGE_DATAFILE`
 
 ## 1.9.2 - 2025-10-02
 

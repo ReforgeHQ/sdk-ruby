@@ -3,7 +3,7 @@
 Ruby Client for Reforge Feature Flags and Config as a Service: https://launch.reforge.com
 
 ```ruby
-client = Reforge::Client.new
+Reforge.init
 
 context = {
   user: {
@@ -14,12 +14,12 @@ context = {
   }
 }
 
-result = client.enabled? "my-first-feature-flag", context
+result = Reforge.enabled? "my-first-feature-flag", context
 
 puts "my-first-feature-flag is: #{result}"
 ```
 
-See full documentation https://docs.prefab.cloud/docs/sdks/ruby
+See full documentation https://docs.reforge.com/docs/sdks/ruby
 
 ## Supports
 
@@ -47,7 +47,7 @@ Many ruby web servers fork. When the process is forked, the current realtime upd
 
 ```ruby
 #config/application.rb
-Prefab.init # reads REFORGE_SDK_KEY env var by default
+Reforge.init # reads REFORGE_BACKEND_SDK_KEY env var by default
 ```
 
 ```ruby

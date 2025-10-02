@@ -7,7 +7,7 @@ module Reforge
 
   def self.init(options = Reforge::Options.new)
     unless @singleton.nil?
-      LOG.warn 'Prefab already initialized.'
+      LOG.warn 'Reforge already initialized.'
       return @singleton
     end
 

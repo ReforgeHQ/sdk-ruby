@@ -2,6 +2,7 @@
 
 module Reforge
   class SSEConfigClient
+    require 'base64'
     class Options
       attr_reader :sse_read_timeout, :seconds_between_new_connection,
                   :sse_default_reconnect_time, :sleep_delay_for_new_connection_check,

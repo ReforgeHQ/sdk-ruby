@@ -80,10 +80,6 @@ module Reforge
       )
     end
 
-    def set_rails_loggers
-      warn '[DEPRECATION] `set_rails_loggers` is deprecated since 1.6. Please use semantic_logger or `Prefab.log_filter` instead.'
-    end
-
     def on_update(&block)
       resolver.on_update(&block)
     end

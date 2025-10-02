@@ -5,7 +5,7 @@ module Reforge
     class InvalidSdkKeyError < Reforge::Error
       def initialize(key)
         if key.nil? || key.empty?
-          message = 'No SDK key. Set REFORGE_SDK_KEY env var or use PREFAB_DATASOURCES=LOCAL_ONLY'
+          message = 'No SDK key. Set REFORGE_BACKEND_SDK_KEY env var or use REFORGE_DATAFILE'
 
           super(message)
         else
