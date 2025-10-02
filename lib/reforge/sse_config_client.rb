@@ -1,7 +1,8 @@
 # frozen_string_literal: true
+require 'base64'
 
 module Reforge
-  class SSEConfigClient
+  class SSEConfigClient    
     class Options
       attr_reader :sse_read_timeout, :seconds_between_new_connection,
                   :sse_default_reconnect_time, :sleep_delay_for_new_connection_check,

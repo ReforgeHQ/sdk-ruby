@@ -46,7 +46,7 @@ module Reforge
 
     private def init(
       sources: nil,
-      sdk_key: ENV['SDK_API_KEY'] || ENV['PREFAB_API_KEY'],
+      sdk_key: ENV['REFORGE_BACKEND_SDK_KEY'] || ENV['PREFAB_API_KEY'],
       namespace: '',
       reforge_api_url: nil,
       on_no_default: ON_NO_DEFAULT::RAISE, # options :raise, :warn_and_return_nil,
@@ -61,7 +61,7 @@ module Reforge
       collect_evaluation_summaries: true,
       collect_max_evaluation_summaries: DEFAULT_MAX_EVAL_SUMMARIES,
       allow_telemetry_in_local_mode: false,
-      datafile: ENV['PREFAB_DATAFILE'],
+      datafile: ENV['REFORGE_DATAFILE'] || ENV['PREFAB_DATAFILE'],
       x_datafile: nil, # DEPRECATED in favor of `datafile`
       x_use_local_cache: false,
       symbolize_json_names: false,

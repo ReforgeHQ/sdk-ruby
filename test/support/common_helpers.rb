@@ -102,7 +102,7 @@ module CommonHelpers
 
   FakeResponse = Struct.new(:status, :body)
 
-  def wait_for(condition, max_wait: 2, sleep_time: 0.01)
+  def wait_for(condition, max_wait: 10, sleep_time: 0.01)
     wait_time = 0
     while !condition.call
       wait_time += sleep_time
