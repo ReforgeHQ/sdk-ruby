@@ -227,11 +227,23 @@ module Reforge
         row.values.each_with_index do |conditional_value, value_index|
           next unless all_criteria_match?(conditional_value, properties)
 
+          # we compute the row index here as if the @config.rows were sorted with the default environment (id=0) last. the client would only ever see one or two rows
+          # 2 rows if there's a default env rule and a targed env rule
+          # 1 row if there's only a default env rule or only a target env rule
+          config_row_index = if @config.rows.length == 1
+                               0
+                             elsif row.project_env_id != 0
+                               0
+                             else
+                               1
+                             end
+
+
           return Reforge::Evaluation.new(
             config: @config,
             value: conditional_value.value,
             value_index: value_index,
-            config_row_index: index,
+            config_row_index: config_row_index,
             context: properties,
             resolver: @resolver
           )
