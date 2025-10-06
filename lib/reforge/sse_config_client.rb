@@ -92,7 +92,12 @@ module Reforge
         end
 
         client.on_error do |error|
-          @logger.error "SSE Streaming Error: #{error.inspect} for url #{url}"
+          # SSL "unexpected eof" is expected when SSE sessions timeout normally
+          if error.is_a?(OpenSSL::SSL::SSLError) && error.message.include?('unexpected eof')
+            @logger.debug "SSE Streaming: Connection closed (expected timeout) for url #{url}"
+          else
+            @logger.error "SSE Streaming Error: #{error.inspect} for url #{url}"
+          end
 
           if @options.errors_to_close_connection.any? { |klass| error.is_a?(klass) }
             @logger.debug "Closing SSE connection for url #{url}"
