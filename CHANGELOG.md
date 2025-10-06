@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.11.1 - 2025-10-06
+
+- quiet logging for SSE reconnections
+- let the SSE::Client handle the Last-Event-ID header
+
 ## 1.10.0 - 2025-10-02
 
 - require `base64` for newest ruby versions
