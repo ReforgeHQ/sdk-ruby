@@ -16,7 +16,6 @@ class TestSSEConfigClient < Minitest::Test
 
     client = Reforge::SSEConfigClient.new(options, config_loader)
 
-    assert_equal 4, client.headers['Last-Event-ID']
     assert_equal "https://stream.goatsofreforge.com", client.source
 
     result = nil
@@ -47,8 +46,6 @@ class TestSSEConfigClient < Minitest::Test
     sse_options = Reforge::SSEConfigClient::Options.new(seconds_between_new_connection: 0.01, sleep_delay_for_new_connection_check: 0.01)
 
     client = Reforge::SSEConfigClient.new(prefab_options, config_loader, sse_options)
-
-    assert_equal 4, client.headers['Last-Event-ID']
 
     result = nil
 
@@ -246,5 +243,42 @@ class TestSSEConfigClient < Minitest::Test
     assert log_lines.any? { |line| line.include?('SSE Streaming Error') && line.include?('empty data') },
            'Expected to have logged an error about empty data for nil'
     mock_client.verify
+  end
+
+  def test_last_event_id_initialization
+    # Test with positive highwater_mark
+    config_loader = OpenStruct.new(highwater_mark: 42)
+    prefab_options = OpenStruct.new(sse_sources: ['http://localhost:4567'], sdk_key: 'test')
+    client = Reforge::SSEConfigClient.new(prefab_options, config_loader)
+
+    # Mock SSE::Client.new to capture the last_event_id argument
+    SSE::Client.stub :new, ->(*args, **kwargs, &block) {
+      assert_equal '42', kwargs[:last_event_id], 'Expected last_event_id to be "42"'
+      OpenStruct.new(closed?: false, close: nil)
+    } do
+      client.connect { |_configs, _event, _source| }
+    end
+
+    # Test with nil highwater_mark
+    config_loader = OpenStruct.new(highwater_mark: nil)
+    client = Reforge::SSEConfigClient.new(prefab_options, config_loader)
+
+    SSE::Client.stub :new, ->(*args, **kwargs, &block) {
+      assert_nil kwargs[:last_event_id], 'Expected last_event_id to be nil when highwater_mark is nil'
+      OpenStruct.new(closed?: false, close: nil)
+    } do
+      client.connect { |_configs, _event, _source| }
+    end
+
+    # Test with zero highwater_mark
+    config_loader = OpenStruct.new(highwater_mark: 0)
+    client = Reforge::SSEConfigClient.new(prefab_options, config_loader)
+
+    SSE::Client.stub :new, ->(*args, **kwargs, &block) {
+      assert_nil kwargs[:last_event_id], 'Expected last_event_id to be nil when highwater_mark is 0'
+      OpenStruct.new(closed?: false, close: nil)
+    } do
+      client.connect { |_configs, _event, _source| }
+    end
   end
 end

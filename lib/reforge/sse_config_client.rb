@@ -72,6 +72,7 @@ module Reforge
                       headers: headers,
                       read_timeout: @options.sse_read_timeout,
                       reconnect_time: @options.sse_default_reconnect_time,
+                      last_event_id: (@config_loader.highwater_mark&.positive? ? @config_loader.highwater_mark.to_s : nil),
                       logger: Reforge::InternalLogger.new(SSE::Client)) do |client|
         client.on_event do |event|
           if event.data.nil? || event.data.empty?
@@ -111,7 +112,6 @@ module Reforge
       auth = "#{AUTH_USER}:#{@prefab_options.sdk_key}"
       auth_string = Base64.strict_encode64(auth)
       return {
-        'Last-Event-ID' => @config_loader.highwater_mark,
         'Authorization' => "Basic #{auth_string}",
         'Accept' => 'text/event-stream',
         'X-Reforge-SDK-Version' => "sdk-ruby-#{Reforge::VERSION}"
