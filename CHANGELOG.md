@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.11.2 - 2025-10-07
+
+- Address OpenSSL issue with vulnerability to truncation attack
+
 ## 1.11.1 - 2025-10-06
 
 - quiet logging for SSE reconnections

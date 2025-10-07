@@ -4,6 +4,7 @@ module Reforge
   class Encryption
     CIPHER_TYPE = "aes-256-gcm" # 32/12
     SEPARATOR = "--"
+    AUTH_TAG_LENGTH = 16
 
     # Hexadecimal format ensures that generated keys are representable with
     # plain text
@@ -32,22 +33,30 @@ module Reforge
       encrypted = cipher.update(clear_text)
       encrypted << cipher.final
       tag = cipher.auth_tag
-
+      
       # pack and join
       [encrypted, iv, tag].map { |p| p.unpack("H*")[0] }.join(SEPARATOR)
     end
 
     def decrypt(encrypted_string)
-      unpacked_parts = encrypted_string.split(SEPARATOR).map { |p| [p].pack("H*") }
+      encrypted_data, iv, auth_tag = encrypted_string.split(SEPARATOR).map { |p| [p].pack("H*") }
+      
+      # Currently the OpenSSL bindings do not raise an error if auth_tag is
+      # truncated, which would allow an attacker to easily forge it. See
+      # https://github.com/ruby/openssl/issues/63
+      if auth_tag.bytesize != AUTH_TAG_LENGTH
+        raise "truncated auth_tag"
+      end
 
       cipher = OpenSSL::Cipher.new(CIPHER_TYPE)
       cipher.decrypt
       cipher.key = @key
-      cipher.iv = unpacked_parts[1]
-      cipher.auth_tag = unpacked_parts[2]
-
+      cipher.iv = iv
+  
+      cipher.auth_tag = auth_tag
+     
       # and decrypt it
-      decrypted = cipher.update(unpacked_parts[0])
+      decrypted = cipher.update(encrypted_data)
       decrypted << cipher.final
       decrypted
     end
