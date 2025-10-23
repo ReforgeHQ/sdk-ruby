@@ -53,6 +53,10 @@ module Reforge
       @feature_flag_client ||= Reforge::FeatureFlagClient.new(self)
     end
 
+    def log_level_client
+      @log_level_client ||= Reforge::LogLevelClient.new(self)
+    end
+
     def context_shape_aggregator
       return nil if @options.collect_max_shapes <= 0
 

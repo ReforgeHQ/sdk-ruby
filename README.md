@@ -64,7 +64,83 @@ after_fork do |server, worker|
 end
 ```
 
+## Dynamic Log Levels
 
+Reforge supports dynamic log level management through SemanticLogger integration. This allows you to change log levels in real-time without redeploying your application.
+
+### Setup with SemanticLogger
+
+Add semantic_logger to your Gemfile:
+
+```ruby
+# Gemfile
+gem "semantic_logger"
+```
+
+### Plain Ruby
+
+```ruby
+require "semantic_logger"
+require "sdk-reforge"
+
+client = Reforge::Client.new(
+  sdk_key: ENV['REFORGE_BACKEND_SDK_KEY'],
+  logger_key: 'log-levels.default' # optional, this is the default
+)
+
+SemanticLogger.sync!
+SemanticLogger.default_level = :trace # Reforge will handle filtering
+SemanticLogger.add_appender(
+  io: $stdout,
+  formatter: :json,
+  filter: client.log_level_client.method(:semantic_filter)
+)
+```
+
+### With Rails
+
+```ruby
+# Gemfile
+gem "amazing_print"
+gem "rails_semantic_logger"
+```
+
+```ruby
+# config/application.rb
+$reforge_client = Reforge::Client.new # reads REFORGE_BACKEND_SDK_KEY env var
+
+# config/initializers/logging.rb
+SemanticLogger.sync!
+SemanticLogger.default_level = :trace # Reforge will handle filtering
+SemanticLogger.add_appender(
+  io: $stdout,
+  formatter: Rails.env.development? ? :color : :json,
+  filter: $reforge_client.log_level_client.method(:semantic_filter)
+)
+```
+
+```ruby
+# puma.rb
+on_worker_boot do
+  SemanticLogger.reopen
+  Reforge.fork
+end
+```
+
+### Configuration
+
+In Reforge Launch, create a `LOG_LEVEL_V2` config with your desired key (default: `log-levels.default`). The config will be evaluated with the following context:
+
+```ruby
+{
+  "reforge-sdk-logging" => {
+    "lang" => "ruby",
+    "logger-path" => "your_app.your_class" # class name converted to lowercase with dots
+  }
+}
+```
+
+You can set different log levels for different classes/modules using criteria on the `reforge-sdk-logging.logger-path` property.
 
 ## Contributing to reforge sdk for ruby
 
