@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Jeff Dwyer".freeze]
-  s.date = "2025-10-07"
+  s.date = "2025-10-23"
   s.description = "Feature Flags, Live Config as a service".freeze
   s.email = "jeff.dwyer@reforge.com.cloud".freeze
   s.extra_rdoc_files = [
@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
     "README.md"
   ]
   s.files = [
+    ".DS_Store",
     ".envrc.sample",
     ".github/CODEOWNERS",
     ".github/pull_request_template.md",
@@ -73,6 +74,8 @@ Gem::Specification.new do |s|
     "lib/reforge/internal_logger.rb",
     "lib/reforge/javascript_stub.rb",
     "lib/reforge/local_config_parser.rb",
+    "lib/reforge/log_level.rb",
+    "lib/reforge/log_level_client.rb",
     "lib/reforge/murmer3.rb",
     "lib/reforge/options.rb",
     "lib/reforge/periodic_sync.rb",
@@ -116,6 +119,7 @@ Gem::Specification.new do |s|
     "test/test_internal_logger.rb",
     "test/test_javascript_stub.rb",
     "test/test_local_config_parser.rb",
+    "test/test_log_level_client.rb",
     "test/test_logger_initialization.rb",
     "test/test_options.rb",
     "test/test_prefab.rb",
@@ -138,7 +142,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency(%q<ld-eventsource>.freeze, [">= 0"])
   s.add_runtime_dependency(%q<uuid>.freeze, [">= 0"])
   s.add_runtime_dependency(%q<activesupport>.freeze, [">= 4"])
-  s.add_runtime_dependency(%q<semantic_logger>.freeze, ["!= 4.16.0"])
+  s.add_development_dependency(%q<semantic_logger>.freeze, ["!= 4.16.0"])
   s.add_development_dependency(%q<allocation_stats>.freeze, [">= 0"])
   s.add_development_dependency(%q<benchmark-ips>.freeze, [">= 0"])
   s.add_development_dependency(%q<bundler>.freeze, [">= 0"])

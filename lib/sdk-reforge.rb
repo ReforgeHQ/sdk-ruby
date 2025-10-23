@@ -5,7 +5,12 @@ module Reforge
   VERSION = File.read(File.dirname(__FILE__) + '/../VERSION').strip
 end
 
-require 'semantic_logger'
+begin
+  require 'semantic_logger'
+rescue LoadError
+  # semantic_logger is optional - only needed for dynamic log level filtering
+end
+
 require 'reforge/internal_logger'
 require 'concurrent/atomics'
 require 'concurrent'

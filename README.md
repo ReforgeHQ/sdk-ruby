@@ -66,7 +66,11 @@ end
 
 ## Dynamic Log Levels
 
-Reforge supports dynamic log level management through SemanticLogger integration. This allows you to change log levels in real-time without redeploying your application.
+Reforge supports dynamic log level management for Ruby logging frameworks. This allows you to change log levels in real-time without redeploying your application.
+
+Supported loggers:
+- SemanticLogger (optional dependency)
+- Ruby stdlib Logger
 
 ### Setup with SemanticLogger
 
@@ -126,6 +130,26 @@ on_worker_boot do
   Reforge.fork
 end
 ```
+
+### With Ruby stdlib Logger
+
+If you're using Ruby's standard library Logger, you can use a dynamic formatter:
+
+```ruby
+require "logger"
+require "sdk-reforge"
+
+client = Reforge::Client.new(
+  sdk_key: ENV['REFORGE_BACKEND_SDK_KEY'],
+  logger_key: 'log-levels.default' # optional, this is the default
+)
+
+logger = Logger.new($stdout)
+logger.level = Logger::DEBUG # Set to most verbose level, Reforge will handle filtering
+logger.formatter = client.log_level_client.stdlib_formatter('MyApp')
+```
+
+The formatter will check dynamic log levels from Reforge and only output logs that meet the configured threshold.
 
 ### Configuration
 

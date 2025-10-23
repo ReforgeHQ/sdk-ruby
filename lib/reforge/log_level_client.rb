@@ -19,8 +19,19 @@ module Reforge
       @base_client = base_client
     end
 
+    # Map from Ruby stdlib Logger severity levels to our LogLevel symbols
+    # Ruby Logger levels: DEBUG=0, INFO=1, WARN=2, ERROR=3, FATAL=4, UNKNOWN=5
+    STDLIB_LOGGER_LEVELS = {
+      0 => :debug,  # Logger::DEBUG
+      1 => :info,   # Logger::INFO
+      2 => :warn,   # Logger::WARN
+      3 => :error,  # Logger::ERROR
+      4 => :fatal,  # Logger::FATAL
+      5 => :fatal   # Logger::UNKNOWN (treat as fatal)
+    }.freeze
+
     # Check if a log message should be logged based on severity and logger path
-    # @param severity [Integer] SemanticLogger severity level (0-5)
+    # @param severity [Integer] Logger severity level (0-5 for SemanticLogger, 0-5 for stdlib Logger)
     # @param path [String] Logger path/name
     # @return [Boolean] true if the message should be logged
     def should_log?(severity, path)
@@ -32,11 +43,45 @@ module Reforge
     # SemanticLogger filter integration
     # @param log [SemanticLogger::Log] The log entry to filter
     # @return [Boolean] true if the log should be output
+    # Note: This method requires semantic_logger gem to be installed
     def semantic_filter(log)
+      unless defined?(SemanticLogger)
+        LOG.warn "semantic_filter called but SemanticLogger is not loaded. Install the 'semantic_logger' gem to use this feature."
+        return true # Allow all logs through if SemanticLogger is not available
+      end
+
       class_path = class_path_name(log.name)
       level = SemanticLogger::Levels.index(log.level)
       log.named_tags.merge!({ path: class_path })
       should_log?(level, class_path)
+    end
+
+    # Returns a formatter proc for use with Ruby stdlib Logger
+    # Usage:
+    #   logger = Logger.new($stdout)
+    #   logger.formatter = client.log_level_client.stdlib_formatter('MyApp')
+    # @param logger_name [String] The name/path of the logger
+    # @return [Proc] A formatter proc that respects dynamic log levels
+    def stdlib_formatter(logger_name)
+      proc do |severity, datetime, progname, msg|
+        # Convert Logger severity string to integer (DEBUG=0, INFO=1, WARN=2, ERROR=3, FATAL=4)
+        severity_int = case severity
+                      when 'DEBUG' then 0
+                      when 'INFO' then 1
+                      when 'WARN' then 2
+                      when 'ERROR' then 3
+                      when 'FATAL', 'UNKNOWN' then 4
+                      else 1
+                      end
+
+        # Check if we should log this message
+        if should_log?(severity_int, logger_name)
+          # Default formatting
+          "[#{datetime.strftime('%Y-%m-%d %H:%M:%S.%L')}] #{severity} -- #{progname}: #{msg}\n"
+        else
+          nil # Don't output the log
+        end
+      end
     end
 
     # Get the log level for a given logger name
