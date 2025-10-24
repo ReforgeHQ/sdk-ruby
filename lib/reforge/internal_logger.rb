@@ -6,6 +6,7 @@ module Reforge
   class InternalLogger
     def initialize(klass)
       @klass = klass
+      @level_sym = nil # Track the symbol level for consistency
 
       if defined?(SemanticLogger)
         @logger = create_semantic_logger
@@ -48,15 +49,15 @@ module Reforge
       if @using_semantic
         @logger.level
       else
-        # Map Logger constant back to symbol
-        case @logger.level
-        when Logger::DEBUG then :debug
-        when Logger::INFO then :info
-        when Logger::WARN then :warn
-        when Logger::ERROR then :error
-        when Logger::FATAL then :fatal
-        else :warn
-        end
+        # Return the symbol level we tracked, or map from Logger constant
+        @level_sym || case @logger.level
+                     when Logger::DEBUG then :debug
+                     when Logger::INFO then :info
+                     when Logger::WARN then :warn
+                     when Logger::ERROR then :error
+                     when Logger::FATAL then :fatal
+                     else :warn
+                     end
       end
     end
 
@@ -64,6 +65,9 @@ module Reforge
       if @using_semantic
         @logger.level = new_level
       else
+        # Track the symbol level for consistency
+        @level_sym = new_level
+
         # Map symbol to Logger constant
         @logger.level = case new_level
                        when :trace, :debug then Logger::DEBUG
@@ -81,7 +85,14 @@ module Reforge
     # If you aren't using reforge log filter, only log warn level and above
     def self.using_reforge_log_filter!
       @@instances&.each do |logger|
-        logger.level = :trace
+        # With SemanticLogger, we can safely set to :trace because the semantic filter
+        # will control output. Without SemanticLogger, keep level at :warn to avoid
+        # flooding logs, since there's no additional filtering
+        if defined?(SemanticLogger)
+          logger.level = :trace
+        else
+          logger.level = :warn
+        end
       end
     end
 
@@ -132,7 +143,12 @@ module Reforge
       end
 
       logger = Logger.new(output_wrapper)
-      logger.level = case env_log_level
+
+      # When SemanticLogger is not available, default to :warn to match SemanticLogger behavior
+      default_level_sym = :warn
+      @level_sym = env_log_level || default_level_sym
+
+      logger.level = case @level_sym
                     when :trace, :debug then Logger::DEBUG
                     when :info then Logger::INFO
                     when :warn then Logger::WARN
