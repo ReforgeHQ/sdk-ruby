@@ -43,6 +43,22 @@ module Reforge
       log_message(:fatal, message, &block)
     end
 
+    def level
+      if @using_semantic
+        @logger.level
+      else
+        # Map Logger constant back to symbol
+        case @logger.level
+        when Logger::DEBUG then :debug
+        when Logger::INFO then :info
+        when Logger::WARN then :warn
+        when Logger::ERROR then :error
+        when Logger::FATAL then :fatal
+        else :warn
+        end
+      end
+    end
+
     def level=(new_level)
       if @using_semantic
         @logger.level = new_level
@@ -103,7 +119,19 @@ module Reforge
 
     def create_stdlib_logger
       require 'logger'
-      logger = Logger.new($stderr)
+      # Create a wrapper that dynamically checks for $logs (used in tests)
+      output_wrapper = Object.new
+      def output_wrapper.write(msg)
+        # Check for $logs at write time (not initialization time)
+        output = defined?($logs) && $logs ? $logs : $stderr
+        output.write(msg)
+      end
+
+      def output_wrapper.close
+        # No-op to satisfy Logger interface
+      end
+
+      logger = Logger.new(output_wrapper)
       logger.level = case env_log_level
                     when :trace, :debug then Logger::DEBUG
                     when :info then Logger::INFO
