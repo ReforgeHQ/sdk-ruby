@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Jeff Dwyer".freeze]
-  s.date = "2025-10-23"
+  s.date = "2025-10-24"
   s.description = "Feature Flags, Live Config as a service".freeze
   s.email = "jeff.dwyer@reforge.com.cloud".freeze
   s.extra_rdoc_files = [
