@@ -15,7 +15,8 @@ module Reforge
         @using_semantic = false
       end
 
-      instances << self if @using_semantic
+      # Track all instances regardless of logger type
+      instances << self
     end
 
     # Log methods
@@ -79,7 +80,6 @@ module Reforge
     # but if you aren't using Reforge logging this could be too chatty.
     # If you aren't using reforge log filter, only log warn level and above
     def self.using_reforge_log_filter!
-      return unless defined?(SemanticLogger)
       @@instances&.each do |logger|
         logger.level = :trace
       end
@@ -141,6 +141,14 @@ module Reforge
                     else Logger::WARN
                     end
       logger.progname = @klass.to_s
+
+      # Use a custom formatter that mimics SemanticLogger format
+      # SemanticLogger format: "ClassName -- Message"
+      # This helps tests that expect SemanticLogger-style output
+      logger.formatter = proc do |severity, datetime, progname, msg|
+        "#{progname} -- #{msg}\n"
+      end
+
       logger
     end
 
