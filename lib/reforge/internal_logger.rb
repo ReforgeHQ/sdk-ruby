@@ -85,14 +85,7 @@ module Reforge
     # If you aren't using reforge log filter, only log warn level and above
     def self.using_reforge_log_filter!
       @@instances&.each do |logger|
-        # With SemanticLogger, we can safely set to :trace because the semantic filter
-        # will control output. Without SemanticLogger, keep level at :warn to avoid
-        # flooding logs, since there's no additional filtering
-        if defined?(SemanticLogger)
-          logger.level = :trace
-        else
-          logger.level = :warn
-        end
+        logger.level = :trace
       end
     end
 
@@ -130,19 +123,9 @@ module Reforge
 
     def create_stdlib_logger
       require 'logger'
-      # Create a wrapper that dynamically checks for $logs (used in tests)
-      output_wrapper = Object.new
-      def output_wrapper.write(msg)
-        # Check for $logs at write time (not initialization time)
-        output = defined?($logs) && $logs ? $logs : $stderr
-        output.write(msg)
-      end
-
-      def output_wrapper.close
-        # No-op to satisfy Logger interface
-      end
-
-      logger = Logger.new(output_wrapper)
+      # When using stdlib Logger (no SemanticLogger), write to $stderr only
+      # Tests use $logs for SemanticLogger-filtered output, not stdlib Logger
+      logger = Logger.new($stderr)
 
       # When SemanticLogger is not available, default to :warn to match SemanticLogger behavior
       default_level_sym = :warn

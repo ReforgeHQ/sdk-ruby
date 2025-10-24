@@ -9,8 +9,7 @@ gem 'uuid'
 
 gem 'activesupport', '>= 4'
 
- group :development do
-  gem 'semantic_logger', '!= 4.16.0', require: "semantic_logger/sync"
+group :development do
   gem 'allocation_stats'
   gem 'benchmark-ips'
   gem 'bundler'
@@ -20,6 +19,7 @@ gem 'activesupport', '>= 4'
 end
 
 group :test do
+  gem 'semantic_logger', '!= 4.16.0', require: "semantic_logger/sync"
   gem 'minitest'
   gem 'minitest-focus'
   gem 'minitest-reporters'

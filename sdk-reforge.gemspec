@@ -142,7 +142,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency(%q<ld-eventsource>.freeze, [">= 0"])
   s.add_runtime_dependency(%q<uuid>.freeze, [">= 0"])
   s.add_runtime_dependency(%q<activesupport>.freeze, [">= 4"])
-  s.add_development_dependency(%q<semantic_logger>.freeze, ["!= 4.16.0"])
   s.add_development_dependency(%q<allocation_stats>.freeze, [">= 0"])
   s.add_development_dependency(%q<benchmark-ips>.freeze, [">= 0"])
   s.add_development_dependency(%q<bundler>.freeze, [">= 0"])
