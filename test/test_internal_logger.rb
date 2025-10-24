@@ -12,8 +12,16 @@ class TestInternalLogger < Minitest::Test
     assert_equal :warn, logger_b.level
 
     Reforge::InternalLogger.using_reforge_log_filter!
-    assert_equal :trace, logger_a.level
-    assert_equal :trace, logger_b.level
+
+    # With SemanticLogger, level goes to :trace (semantic filter controls output)
+    # Without SemanticLogger, level stays at :warn (prevents log flooding)
+    if defined?(SemanticLogger)
+      assert_equal :trace, logger_a.level
+      assert_equal :trace, logger_b.level
+    else
+      assert_equal :warn, logger_a.level
+      assert_equal :warn, logger_b.level
+    end
   end
 
 end
