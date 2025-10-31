@@ -49,6 +49,13 @@ module Reforge
   end
 
   def self.log_filter
+    unless defined?(SemanticLogger)
+      # SemanticLogger is optional - return a pass-through filter
+      # Only log debug message if explicitly enabled
+      LOG.debug 'log_filter called but SemanticLogger is not available. Install the semantic_logger gem to use this feature.' if ENV['REFORGE_LOG_CLIENT_BOOTSTRAP_LOG_LEVEL'] == 'debug'
+      return Proc.new { |log| true } # Pass through all logs
+    end
+
     InternalLogger.using_reforge_log_filter!
     return Proc.new do |log|
       bootstrap_log_level(log)
@@ -60,6 +67,8 @@ module Reforge
   end
 
   def self.bootstrap_log_level(log)
+    return true unless defined?(SemanticLogger)
+
     level = ENV['REFORGE_LOG_CLIENT_BOOTSTRAP_LOG_LEVEL'] ? ENV['REFORGE_LOG_CLIENT_BOOTSTRAP_LOG_LEVEL'].downcase.to_sym : :warn
     SemanticLogger::Levels.index(level) <= SemanticLogger::Levels.index(log.level)
   end

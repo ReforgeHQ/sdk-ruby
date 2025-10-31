@@ -18,6 +18,7 @@ module Reforge
     attr_reader :global_context
     attr_accessor :is_fork
     attr_reader :symbolize_json_names
+    attr_reader :logger_key
 
     module ON_INITIALIZATION_FAILURE
       RAISE = :raise
@@ -65,7 +66,8 @@ module Reforge
       x_datafile: nil, # DEPRECATED in favor of `datafile`
       x_use_local_cache: false,
       symbolize_json_names: false,
-      global_context: {}
+      global_context: {},
+      logger_key: 'log-levels.default'
     )
       @sdk_key = sdk_key
       @namespace = namespace
@@ -90,6 +92,7 @@ module Reforge
       @is_fork = false
       @global_context = global_context
       @symbolize_json_names = symbolize_json_names
+      @logger_key = logger_key
 
       # defaults that may be overridden by context_upload_mode
       @collect_shapes = false

@@ -9,8 +9,11 @@ module CommonHelpers
     $logs = StringIO.new
     Reforge::Context.global_context.clear
     Reforge::Context.default_context.clear
-    SemanticLogger.add_appender(io: $logs, filter: Reforge.log_filter)
-    SemanticLogger.sync!
+
+    if defined?(SemanticLogger)
+      SemanticLogger.add_appender(io: $logs, filter: Reforge.log_filter)
+      SemanticLogger.sync!
+    end
   end
 
   def teardown
