@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.12.1 - 2025-10-31
+- Remove `Reforge.log_filter` method. Use `filter: ->(log) { Reforge.instance.log_level_client.semantic_filter(log) }` instead
+
 ## 1.12.0 - 2025-10-31
 
 - Restore log level functionality with LOG_LEVEL_V2 support
