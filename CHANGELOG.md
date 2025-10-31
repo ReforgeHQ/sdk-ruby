@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.12.0 - 2025-10-31
+
+- Restore log level functionality with LOG_LEVEL_V2 support
+- Make SemanticLogger optional - SDK now works with or without it
+- Add stdlib Logger support as alternative to SemanticLogger
+- Add InternalLogger that automatically uses SemanticLogger or stdlib Logger
+- Add `logger_key` initialization option for configuring dynamic log levels
+- Add `stdlib_formatter` method for stdlib Logger integration
+
 ## 1.11.2 - 2025-10-07
 
 - Address OpenSSL issue with vulnerability to truncation attack
